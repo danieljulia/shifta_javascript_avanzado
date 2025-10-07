@@ -16,8 +16,17 @@
 
 ## Ventajas de los frameworks respecto a JavaScript puro
 
-Vue.js y otros frameworks frontend ofrecen ventajas significativas sobre JavaScript puro al simplificar y optimizar el desarrollo de aplicaciones web complejas. Proporcionan una estructura organizada mediante componentes reutilizables, lo que mejora la mantenibilidad y escalabilidad del código. Además, incorporan sistemas de reactividad automática (como el enlace de datos bidireccional en Vue.js) que sincronizan la interfaz con los datos subyacentes sin necesidad de manipular manualmente el DOM, reduciendo errores y código repetitivo. Estos frameworks también incluyen herramientas integradas para gestión de estado, enrutamiento y optimización de rendimiento, junto con un ecosistema de librerías y convenciones que aceleran el desarrollo.  
-A diferencia del "Vanilla JavaScript", que requiere soluciones personalizadas para cada funcionalidad, los frameworks estandarizan buenas prácticas y permiten enfocarse en la lógica de negocio, aumentando la productividad y facilitando la colaboración en equipos.
+Vue.js y otros frameworks frontend ofrecen grandes ventajas frente a JavaScript puro, ya que simplifican y optimizan el desarrollo de aplicaciones web complejas.  
+Estos frameworks proporcionan una estructura clara basada en **componentes reutilizables**, lo que facilita el mantenimiento y la escalabilidad del código.  
+
+Además, incorporan **sistemas de reactividad automática** —como el **enlace de datos bidireccional** en Vue.js— que mantienen sincronizados los datos y la interfaz sin necesidad de manipular manualmente el DOM.  
+Esto reduce errores y evita escribir código repetitivo.  
+
+También incluyen herramientas integradas para la **gestión del estado**, el **enrutamiento** y la **optimización del rendimiento**, además de un amplio ecosistema de librerías y convenciones que aceleran el desarrollo.  
+
+En cambio, con **JavaScript puro (Vanilla JavaScript)** es necesario crear soluciones personalizadas para cada funcionalidad.  
+Los frameworks, en cambio, **estandarizan buenas prácticas**, permiten centrarse en la **lógica de negocio** y facilitan la **colaboración en equipo**, aumentando la productividad general.
+
 
 La inversión en el estudio de este tipo de frameworks vale la pena, ya que una vez aprendidos, la programación de aplicaciones en JavaScript se vuelve mucho más sencilla y ágil.
 
@@ -73,6 +82,15 @@ Nosotros utilizaremos dos formas de instalarlo:
 npm install vue
 ```
 
+- Utilizando vite (y escogiendo Vue en el asistente)
+En la línea de comandos, Vue permite crear un esqueleto completo con funcionalidades extra respondiendo una serie de preguntas.  
+Es un entorno muy completo, por ejemplo, para crear SPA.
+
+```bash
+npm create vite@latest
+```
+
+
 Introducción a Vue 3 de su creador  
 <https://www.vuemastery.com/courses/vue3-deep-dive-with-evan-you/vue3-overview>
 
@@ -94,9 +112,11 @@ vite
 En "2_vue_vite" tenemos una plantilla montada para funcionar con Vite, un poco más compleja y usando el paquete npm.  
 Se debe compilar y el resultado se guarda en *dist* con el siguiente comando:
 
+Para crear el proyecto
 ```bash
-npm run build
+npm create vite@latest
 ```
+Y a partir de aqui podemos ver el proyecto y hacer cambios
 
 Podemos ver los cambios en tiempo real:
 
@@ -104,21 +124,43 @@ Podemos ver los cambios en tiempo real:
 npm run dev
 ```
 
+Finalment para crear la versión de producción
+
+```bash
+npm run build
+```
+
+
 ## Ejemplo de portfolio con Vue 
 
 En este ejemplo "3_portfolio" vemos una plantilla de un portfolio sencillo que se alimenta de un archivo JSON con los contenidos.
 
-## Crear aplicación usando línea de comandos
 
-En la línea de comandos, Vue permite crear un esqueleto completo con funcionalidades extra respondiendo una serie de preguntas.  
-Es un entorno muy completo, por ejemplo, para crear SPA.
+### Rutas absolutas y relativas
 
-```bash
-npm create vue@latest
+Vite asume por defecto que nuestro proyecto va a estar en la raiz del servidor
+El problema es que si no es así, por ejemplo lo tenemos en una direccion parecida a  https://ejemplo.com/miaplicacion/ no encontrará los recursos (css, js etc)
+
+Para solucionarlo hay que editar el archivo `vite.config.js` y añadir la siguiente línea:
+
+```js
+export default defineConfig({
+  base: '/miaplicacion/'
+})
 ```
+
+o mejor 
+
+```js
+export default defineConfig({
+  base: './'
+})
+```
+## Otros ejemplos con vue
 
 ## Curso de Vue 2 (la mayoría de conceptos sirven para Vue 3, que es la versión actual)
 
+Ver curso de Vue 2
 <https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/>
 
 ## Vue.js vs React
@@ -146,3 +188,5 @@ La aplicación debe tener las siguientes funcionalidades:
 - Leer archivo json con los datos (como mínimo nombre proyecto, descripción e imagen)
 - En la página de inicio se muestra un listado de todos los proyectos, cada uno de ellos con un enlace que te lleva a ver los detalles de un proyecto
 - Página única de cada proyecto con más información
+
+Se puede implementar usando vuejs a partir de un CDN o creando un proyecto con vite (esqueleto)

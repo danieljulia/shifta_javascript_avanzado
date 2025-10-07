@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>Explorador Pokémon (corregido)</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; text-align: center; margin: 40px; }
+    .pokemon-card { border: 1px solid #ddd; padding: 20px; display: inline-block; border-radius: 10px; min-width: 260px; }
+    img { width: 160px; height: 160px; object-fit: contain; }
+    input { padding: 8px; font-size: 14px; width: 160px; }
+    button { margin: 6px; padding: 8px 12px; font-size: 14px; cursor: pointer; }
+    .error { color: #b00020; margin-top: 10px; }
+    .meta { color: #555; font-size: 14px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Explorador Pokémon</h1>
+
+    <input v-model="search" placeholder="Nombre o ID" @keyup.enter="onSearch" />
+    <button @click="onSearch">Buscar</button>
+    <button @click="prevPokemon" :disabled="!pokemon || pokemon.id <= 1">Anterior</button>
+    <button @click="nextPokemon" :disabled="!pokemon">Siguiente</button>
+
+    <div v-if="loading" class="meta">Cargando...</div>
+
+    <div v-if="pokemon" class="pokemon-card">
+      <h2>#{{ pokemon.id }} — {{ pokemon.name.toUpperCase() }}</h2>
+      <img :src="imageSrc" :alt="pokemon.name" />
+      <p class="meta">
+        Tipo:
+        <span v-for="(t,i) in pokemon.types" :key="t.type.name">
+          {{ t.type.name }}<span v-if="i < pokemon.types.length-1">, </span>
+        </span>
+      </p>
+      <p class="meta">HP: {{ stat('hp') }} | Ataque: {{ stat('attack') }}</p>
+
+      <div style="text-align:left; margin-top:10px;">
+        <strong>Habilidades:</strong>
+        <ul>
+          <li v-for="h in pokemon.abilities" :key="h.ability.name">{{ h.ability.name }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div v-if="error" class="error">{{ error }}</div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+      setup() {
+        const pokemon = ref(null);
+        const search = ref('1'); // empieza con 1
+        const error = ref('');
+        const loading = ref(false);
+
+        // conversión segura del parámetro y trim
+        const fetchPokemon = async (nameOrId) => {
+          const q = String(nameOrId ?? '').trim().toLowerCase();
+          if (!q) {
+            error.value = 'Introduce un nombre o ID válido';
+            return;
+          }
+
+          loading.value = true;
+          try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(q)}`);
+            if (!res.ok) throw new Error('Pokémon no encontrado');
+            const data = await res.json();
+            pokemon.value = data;
+            search.value = String(data.id); // mantener input como string con el id
+            error.value = '';
+          } catch (err) {
+            error.value = err.message || 'Error al obtener datos';
+            pokemon.value = null;
+          } finally {
+            loading.value = false;
+          }
+        };
+
+        const onSearch = () => fetchPokemon(search.value);
+
+        const prevPokemon = () => {
+          if (!pokemon.value) return;
+          const id = Number(pokemon.value.id);
+          if (id > 1) fetchPokemon(id - 1);
+        };
+
+        const nextPokemon = () => {
+          if (!pokemon.value) return;
+          fetchPokemon(Number(pokemon.value.id) + 1);
+        };
+
+        const imageSrc = computed(() => {
+          if (!pokemon.value) return '';
+          // fallback a official-artwork si existe
+          return pokemon.value.sprites?.other?.['official-artwork']?.front_default
+            || pokemon.value.sprites?.front_default
+            || pokemon.value.sprites?.front_shiny
+            || '';
+        });
+
+        const stat = (name) => {
+          if (!pokemon.value) return '-';
+          const s = pokemon.value.stats.find(s => {
+            const key = s.stat.name.toLowerCase();
+            return key.includes(name);
+          });
+          return s ? s.base_stat : '-';
+        };
+
+        // cargar el primero al inicio
+        fetchPokemon(search.value);
+
+        return { pokemon, search, fetchPokemon, prevPokemon, nextPokemon, imageSrc, stat, error, loading, onSearch };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -27,4 +27,4 @@ async function searchWikipedia(query) {
   }
 }
 
-searchWikipedia('Barcelona');
+searchWikipedia('Paris');

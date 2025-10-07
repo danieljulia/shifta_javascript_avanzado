@@ -1,4 +1,4 @@
-# Semana 3. Aplicaciones Web Progresivas (PWA). Firebase para Almacenamiento y Base de Datos
+# Semana 3. Aplicaciones Web Progresivas (PWA). Mockapi para Almacenamiento y Base de Datos
 
 Índice
 

@@ -59,12 +59,12 @@
     },
     async mounted() {
       try {
-        const response = await fetch('/data.json');
+        const response = await fetch('./data.json');
         this.portfolio = await response.json();
         console.log('Portfolio data loaded:', this.portfolio);
   
-        // Optional extra fetch
-        fetch('/prueba.json')
+        // Optional extra fetch /--> quiere decir que va a buscarlo en /public
+        fetch('./prueba.json')
           .then(r => r.ok ? r.json() : null)
           .then(d => d && console.log('Test data loaded:', d))
           .catch(() => {});

@@ -1,1 +1,0 @@
-{"mappings":"AAAA","sources":["styles.css"],"sourcesContent":["#fotos img{\n    width: 400px;\n    height: 100%;\n    object-fit: cover;\n}"],"names":[],"version":3,"file":"index.1303bb05.css.map","sourceRoot":"/__parcel_source_root/"}
