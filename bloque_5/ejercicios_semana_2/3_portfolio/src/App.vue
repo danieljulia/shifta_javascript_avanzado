@@ -19,7 +19,6 @@
       <section v-if="portfolio" id="gallery" class="gallery">
         <a v-for="project in portfolio.projects"
            :key="project.name"
-           :href="project.link || '#'"
            class="gallery-item">
           <img :src="project.image" :alt="project.name">
           <p>{{ project.name }}</p>
@@ -63,11 +62,7 @@
         this.portfolio = await response.json();
         console.log('Portfolio data loaded:', this.portfolio);
   
-        // Optional extra fetch /--> quiere decir que va a buscarlo en /public
-        fetch('./prueba.json')
-          .then(r => r.ok ? r.json() : null)
-          .then(d => d && console.log('Test data loaded:', d))
-          .catch(() => {});
+        
       } catch (e) {
         console.error('Error fetching data:', e);
       }
