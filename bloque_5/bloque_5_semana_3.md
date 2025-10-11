@@ -28,7 +28,7 @@ Ventajas:
 
 Inconvenientes:
 
-- Al utilizar tecnologías web, el rendimiento puede ser inferior a una aplicación nativa
+- Comparado con una aplicación móvil nativa al utilizar tecnologías web, el rendimiento puede ser inferior.
 
 En Vue se puede implementar utilizando vue-router
 
@@ -140,41 +140,7 @@ npx http-server -p 8080
 
 En un proyecto frontend con JavaScript, a veces no necesitamos una base de datos real, sino solo simular datos para pruebas o desarrollo. Una forma sencilla es usar un archivo JSON que actúe como "base de datos". Este archivo contiene la información estructurada (objetos, listas, valores) y desde JavaScript podemos cargarlo mediante fetch. De esta manera, el JSON hace el papel de backend y nos permite trabajar como si tuviéramos una API.
 
-```
-{
-  "usuarios": [
-    { "id": 1, "nombre": "Ana", "email": "ana@example.com" },
-    { "id": 2, "nombre": "Luis", "email": "luis@example.com" },
-    { "id": 3, "nombre": "Carla", "email": "carla@example.com" }
-  ]
-}
-```
-Y en nuestro script.js podemos leerlo así:
-
-```
-// Cargar el archivo JSON y usarlo como "base de datos"
-fetch("data.json")
-  .then(response => response.json())
-  .then(data => {
-    console.log("Usuarios desde JSON:", data.usuarios);
-
-    // Ejemplo: mostrar los nombres en la página
-    const lista = document.getElementById("listaUsuarios");
-    data.usuarios.forEach(u => {
-      const li = document.createElement("li");
-      li.textContent = `${u.nombre} (${u.email})`;
-      lista.appendChild(li);
-    });
-  })
-  .catch(error => console.error("Error cargando JSON:", error));
-````
-Y en el HTML:
-
-```
-<ul id="listaUsuarios"></ul>
-<script src="script.js"></script>
-```
-(ver ejemplo /leer_json)
+(ver ejemplos /leer_json)
 
 👉 Con esto, el archivo data.json funciona como nuestra "base de datos simulada" en el frontend.
 
@@ -183,7 +149,7 @@ Y en el HTML:
 El localStorage es una herramienta del navegador que permite guardar datos de forma sencilla y persistente en pares de clave y valor. A diferencia de las variables normales, los datos almacenados en localStorage no se pierden al recargar la página o cerrar el navegador; permanecen disponibles hasta que se eliminan manualmente. Esto lo convierte en una opción muy útil para simular un backend en aplicaciones frontend, ya que podemos guardar y recuperar información como si fuese una pequeña base de datos local.
 Con localStorage.setItem(clave, valor) almacenamos información, y con localStorage.getItem(clave) la recuperamos. Normalmente, para trabajar con objetos y arrays, utilizamos JSON.stringify() al guardarlos y JSON.parse() al leerlos.
  
-Ver ejemplo /localstorage
+Ver ejemplos /4_localstorage
 
 
 ## Mockapi
@@ -195,7 +161,7 @@ En la web de mockapi hay ejemplos de código para consumir la api
 
 https://github.com/mockapi-io/docs/wiki/Code-examples
 
-Podemos ver un ejemplo en /mockapi donde se visualizan los datos que provienen de un .json
+Podemos ver un ejemplo en 5_ejemplos_mockapi donde se visualizan los datos que provienen de un .json
 Se ha creado partiendo de la plantilla de vue vacia
 
 ```
@@ -204,6 +170,9 @@ npm create vue@latest
 
 Usando mockapi incluso podemos hacer el frontend para crear o borrar datos (utilizando el comando POST)
 (ejercicio avanzado propuesto, añadir en el ejemplo anterior una opción para añadir elementos, y otra para borrarlos)
+
+
+-----------> hasta aqui actualizado 
 
 ## Introducción a Firebase
 

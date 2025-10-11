@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Leer JSON</title>
+    </head>
+    <body>
+        <h1>Usuarios</h1>
+        <ul id="listaUsuarios"></ul>
+        <script src="script.js"></script>
+    </body>
+    <script>
+        // Cargar el archivo JSON y usarlo como "base de datos"
+fetch("data.json")
+  .then(response => response.json())
+  .then(data => {
+    console.log("Usuarios desde JSON:", data.usuarios);
+
+    // Ejemplo: mostrar los nombres en la página
+    const lista = document.getElementById("listaUsuarios");
+    data.usuarios.forEach(u => {
+      const li = document.createElement("li");
+      li.textContent = `${u.nombre} (${u.email})`;
+      lista.appendChild(li);
+    });
+  })
+  .catch(error => console.error("Error cargando JSON:", error));
+    </script>
+</html>
