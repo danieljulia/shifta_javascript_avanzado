@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador con Vue.js 3</title>
+  <!-- CDN de Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <h1>Contador: {{ count }}</h1>
+    <button @click="increment">Incrementar</button>
+    <button @click="decrement">Decrementar</button>
+  </div>
+
+  <script>
+    // Desestructuramos createApp de Vue 3
+    const { createApp } = Vue;
+
+    // Creamos la aplicación Vue 3
+    createApp({
+      // Función data que devuelve el estado reactivo
+      data() {
+        return {
+          count: 0  // Contador inicializado en 0
+        }
+      },
+      // Métodos de la aplicación
+      methods: {
+        // Incrementa el contador en 1
+        increment() {
+          this.count++;
+        },
+        // Decrementa el contador en 1
+        decrement() {
+          this.count--;
+        }
+      }
+    }).mount('#app');  // Montamos la aplicación en el elemento con id="app"
+  </script>
+
+</body>
+</html>
