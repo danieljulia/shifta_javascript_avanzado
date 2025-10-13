@@ -13,7 +13,8 @@
 - [Backend de escritura](#backend-de-escritura)
 - [Firebase storage para almacenar archivos](#firebase-storage-para-almacenar-archivos)
 - [Otros aspectos de firebase](#otros-aspectos-de-firebase)
-- [Tarea](#ejercicio)
+- [Bonus: Algunos ejemplos de servicios de Inteligencia Artificial](#bonus-algunos-ejemplos-de-servicios-de-inteligencia-artificial)
+- [Tarea](#tarea)
 
 ## Introducción a las SPA
 
@@ -74,7 +75,6 @@ Para que funcione una PWA es imprescindible que tenga un certificado ssl (https)
 Se puede probar este ejemplo aquí
 https://pimpampum.net/tmp/pwa_simple/
 
---> aqui 
 
 ## Progressive Web Applications. App manifest 
 
@@ -156,7 +156,7 @@ Ver ejemplos /4_localstorage
 
 - https://mockapi.io/projects
 
-
+Mopckapi es un servicio de base de datos en la nube gratuita que nos permite crear endpoints para simular una base de datos. 
 En la web de mockapi hay ejemplos de código para consumir la api
 
 https://github.com/mockapi-io/docs/wiki/Code-examples
@@ -169,17 +169,17 @@ npm create vue@latest
 ```
 
 Usando mockapi incluso podemos hacer el frontend para crear o borrar datos (utilizando el comando POST)
-(ejercicio avanzado propuesto, añadir en el ejemplo anterior una opción para añadir elementos, y otra para borrarlos)
+Los datos son persistentes, no como en el caso de localstorage
 
 
------------> hasta aqui actualizado 
 
 ## Introducción a Firebase
 
 Para aplicaciones reales necesitamos un backend de lectura/escritura más potente y con otras funcionalidades.
 Firestore es un servicio de base de datos de Google en la nube que forma parte de Firebase 
 Una de sus ventajas es que tiene un ajuste de escala automático (adapta automáticamente los recursos a lo que necesita)
-Es gratuito si el uso es limitado
+Es gratuito si el uso es limitado 
+
 
 https://firebase.google.com/
 
@@ -206,6 +206,17 @@ Como almacenar archivos y conceptos más avanzados
 
 - Permite gestionar la autenticación
 - Permite acceso a estadísticas de uso
+
+## Bonus: Algunos ejemplos de servicios de Inteligencia Artificial
+
+- Ver ejemplos en /7_inteligencia_artificial
+
+- DeepAI 
+Es un servicio de IA que nos permite generar imágenes a partir de texto. 
+https://deepai.org/
+- Replicate
+https://replicate.com/
+Es un servicio de IA que nos permite llamar a modelos de IA para generar imágenes, texto, etc.
 
 ## Tarea
 
