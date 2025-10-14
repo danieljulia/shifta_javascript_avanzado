@@ -1,7 +1,9 @@
 <template>
     <div>
       <h2>Home Page</h2>
-     
+      
+      <a href="/project/1">Project 1</a>
+      
       <h3>Posibles mejoras a hacer en este ejemplo</h3>
       <ul>
         <li>Cargar un json con información de proyectos y mostrar un listado</li>
