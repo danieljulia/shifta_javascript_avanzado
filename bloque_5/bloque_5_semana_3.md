@@ -1,88 +1,82 @@
 # Semana 3. Aplicaciones Web Progresivas (PWA). Mockapi para Almacenamiento y Base de Datos
 
-Índice
+## Índice
 
-- [Introducción a las SPA](#introducción-a-las-spa)
-- [Introducción a las PWA](#introducción-a-las-pwa)
-- [Progressive Web Applications. App manifest](#progressive-web-applications-app-manifest)
-- [Workbox](#workbox)
-- [Simulación de base de datos con .json](#simulación-de-base-de-datos-con-json)
-- [Simulación de backend con localStorage](#simulación-de-backend-con-localstorage)
-- [Mockapi](#mockapi)
-- [Introducción a Firebase](#introducción-a-firebase)
-- [Backend de escritura](#backend-de-escritura)
-- [Firebase storage para almacenar archivos](#firebase-storage-para-almacenar-archivos)
-- [Otros aspectos de firebase](#otros-aspectos-de-firebase)
-- [Bonus: Algunos ejemplos de servicios de Inteligencia Artificial](#bonus-algunos-ejemplos-de-servicios-de-inteligencia-artificial)
-- [Tarea](#tarea)
+- [Introducción a las SPA](#introducción-a-las-spa)  
+- [Introducción a las PWA](#introducción-a-las-pwa)  
+- [Progressive Web Applications. App manifest](#progressive-web-applications-app-manifest)  
+- [Workbox](#workbox)  
+- [Simulación de base de datos con .json](#simulación-de-base-de-datos-con-json)  
+- [Simulación de backend con localStorage](#simulación-de-backend-con-localstorage)  
+- [Mockapi](#mockapi)  
+- [Introducción a Firebase](#introducción-a-firebase)  
+- [Backend de escritura](#backend-de-escritura)  
+- [Firebase storage para almacenar archivos](#firebase-storage-para-almacenar-archivos)  
+- [Otros aspectos de Firebase](#otros-aspectos-de-firebase)  
+- [Tarea](#tarea)  
+
+---
 
 ## Introducción a las SPA
 
-Una SPA es una aplicación web o sitio web que interactúa con el usuario cargando una única página HTML inicial y actualizando dinámicamente el contenido de esa página a medida que el usuario interactúa con la aplicación, en lugar de cargar páginas completas nuevas desde el servidor. Toda la complejidad de la aplicación se realiza sobre un único archivo HTML. 
+Una SPA (Single Page Application) es una aplicación web o sitio web que interactúa con el usuario cargando una única página HTML inicial y actualizando dinámicamente su contenido a medida que el usuario interactúa, en lugar de cargar páginas completas nuevas desde el servidor. Toda la lógica y complejidad de la aplicación se gestiona en un único archivo HTML.  
 
-Ventajas:
+**Ventajas:**  
+- Navegación fluida  
+- Carga asíncrona  
+- Renderizado del lado del cliente  
+- Menor carga en el servidor  
 
-- Navegación fluida
-- Carga asíncrona
-- Renderizado del lado del cliente
-- Menor carga del servidor
+**Inconvenientes:**  
+- Comparado con una aplicación móvil nativa, el rendimiento puede ser inferior debido al uso de tecnologías web.  
 
-Inconvenientes:
+En Vue, se puede implementar utilizando `vue-router`.  
 
-- Comparado con una aplicación móvil nativa al utilizar tecnologías web, el rendimiento puede ser inferior.
+Veamos un ejemplo de SPA con dos opciones: Home y About (ver `vue_spa`).  
+En el directorio del ejemplo se explica cómo se ha creado.  
 
-En Vue se puede implementar utilizando vue-router
+**Ver ejemplo sencillo**  
 
-Veamos un ejemplo de una SPA con dos opciones, Home y About
-(ver vue_spa)
-En el directorio del ejemplo hay una explicación de cómo se ha creado
-
-
-Ver ejemplo sencillo
+---
 
 ## Introducción a las PWA
 
-Las PWA (Progressive Web Apps) son aplicaciones web diseñadas para funcionar de manera similar a las aplicaciones nativas que instalas en tu teléfono o computadora, pero con ventajas únicas al estar basadas en tecnologías web. Combina lo mejor de ambos mundos: la accesibilidad de una página web y la experiencia de usuario de una app tradicional.
+Las PWA (Progressive Web Apps) son aplicaciones web diseñadas para funcionar de manera similar a las aplicaciones nativas, pero con ventajas propias de la web. Combinan la accesibilidad de una página web con la experiencia de usuario de una app tradicional.  
 
-- Tienen apariencia de aplicación (no se visualizan los controles del navegador web)
-- Pueden funcionar sin conexión (offline)
-- Se pueden instalar (aunque la opción de instalación no funciona en todos los navegadores y sistemas operativos)
-- Son responsivas
-- Se actualizan automáticamente (como cualquier web)
-- Pueden usar notificaciones push 
+**Características:**  
+- Tienen apariencia de aplicación (sin los controles del navegador)  
+- Funcionan sin conexión (offline)  
+- Se pueden instalar en el dispositivo (aunque no en todos los navegadores y sistemas)  
+- Son responsivas  
+- Se actualizan automáticamente  
+- Pueden usar notificaciones push  
 - Son seguras (https)  
 
-Son más ligeras y menos costosas que una aplicación nativa
-En contrapartida no tienen tanto rendimiento (sobre todo en juegos y aplicaciones con gráficos intensivos)
+Son más ligeras y menos costosas que una app nativa, aunque no alcanzan el mismo rendimiento en aplicaciones con gráficos intensivos o juegos.  
 
-En realidad son una evolución de las páginas web tradicionales 
+En realidad, son una evolución de las páginas web tradicionales.  
 
-Video introductorio
-https://www.youtube.com/watch?v=BByUknfLTuA&list=PLlrxD0HtieHjqO1pNqScMngrV7oFro-TY
+**Video introductorio:**  
+[https://www.youtube.com/watch?v=BByUknfLTuA&list=PLlrxD0HtieHjqO1pNqScMngrV7oFro-TY](https://www.youtube.com/watch?v=BByUknfLTuA&list=PLlrxD0HtieHjqO1pNqScMngrV7oFro-TY)  
 
+Por ejemplo:  
+- [https://airhorner.com/](https://airhorner.com/) funciona incluso sin conexión y se puede instalar en el móvil.  
+- Manifest del ejemplo: [https://airhorner.com/manifest.json](https://airhorner.com/manifest.json)  
 
-Si entramos en este ejemplo
-https://airhorner.com/
-y desconectamos la conexión de internet veremos que sigue funcionando.
-Además la podemos instalar en el móvil con su propio icono
-https://airhorner.com/manifest.json
+En el ejemplo `pwa_simple` se muestra una PWA muy sencilla que se puede instalar y usar offline.  
 
-En el ejemplo pwa_simple vemos una PWA muy sencilla que se puede instalar y funcionar off-line.
+> Nota: Para que funcione una PWA es imprescindible un certificado SSL (https).  
+> Prueba el ejemplo aquí: [https://pimpampum.net/tmp/pwa_simple/](https://pimpampum.net/tmp/pwa_simple/)  
 
+---
 
+## Progressive Web Applications. App manifest
 
-Para que funcione una PWA es imprescindible que tenga un certificado ssl (https)
-Se puede probar este ejemplo aquí
-https://pimpampum.net/tmp/pwa_simple/
+El **manifest** es un archivo JSON (`manifest.json`) que debe colocarse en la raíz de la web.  
 
+**Ejemplo:**
 
-## Progressive Web Applications. App manifest 
-
-El manifest es un archivo json con el nombre manifest.json que hay que poner en la raiz de la web
-
-Ejemplo
-
-```
+```json
 {
   "short_name": "Portfolio",
   "name": "Portfolio shifta",
@@ -105,132 +99,138 @@ Ejemplo
 }
 ```
 
-En el inspector del navegador podemos ver todos sus campos (en la sección application)
+En el inspector del navegador podemos ver todos sus campos (sección *Application*).  
 
-Existen herramientas que permiten crear el archivo manifest 
-https://progressier.com/pwa-manifest-generator
-https://app-manifest.firebaseapp.com/
+Existen herramientas que generan el manifest automáticamente:  
+- [https://progressier.com/pwa-manifest-generator](https://progressier.com/pwa-manifest-generator)  
+- [https://app-manifest.firebaseapp.com/](https://app-manifest.firebaseapp.com/)  
 
-Para saber más:
-https://web.dev/articles/add-manifest
+Más información: [https://web.dev/articles/add-manifest](https://web.dev/articles/add-manifest)  
 
+> Ejemplo: Convertimos nuestro portfolio en PWA añadiendo el `manifest.json` (`spa_pwa`).  
 
-> Ejemplo. Convertimos nuestro portfolio en una PWA añadiendo en manifest (spa_pwa)
+---
 
 ## Workbox
 
-Uno de los temas más interesantes de las PWA es que pueden funcionar (opcionalmente) off-line. Esto se consigue mediante los "service workers"
-Existe una libreria de google llamada Workbox que facilita mucho esta funcionalidad.
+Uno de los aspectos más interesantes de las PWA es que pueden funcionar offline mediante los **service workers**.  
+**Workbox** es una librería de Google que facilita esta funcionalidad.  
 
-https://developer.chrome.com/docs/workbox
+- Documentación: [https://developer.chrome.com/docs/workbox](https://developer.chrome.com/docs/workbox)  
+- Instalación: `npm install --save-dev workbox-cli`  
+- Comandos:  
+  ```bash
+  workbox --version
+  workbox wizard
+  workbox generateSW
+  ```  
 
-Es un package de npm
-npm install --save-dev workbox-cli
-
-workbox --version
-
-workbox wizard
-
-workbox generateSW
-
-Nota: Otra manera de lanzar un servidor local con npx
+Otra forma de lanzar un servidor local:  
+```bash
 npx http-server -p 8080
+```  
 
-## Simulación de base de datos con .json 
+---
 
-En un proyecto frontend con JavaScript, a veces no necesitamos una base de datos real, sino solo simular datos para pruebas o desarrollo. Una forma sencilla es usar un archivo JSON que actúe como "base de datos". Este archivo contiene la información estructurada (objetos, listas, valores) y desde JavaScript podemos cargarlo mediante fetch. De esta manera, el JSON hace el papel de backend y nos permite trabajar como si tuviéramos una API.
+## Simulación de base de datos con .json
 
-(ver ejemplos /leer_json)
+En proyectos frontend con JavaScript, a veces no necesitamos una base de datos real, solo simular datos para pruebas o desarrollo.  
+Una forma sencilla es usar un archivo JSON que actúe como “base de datos”. Desde JavaScript podemos cargarlo mediante `fetch`, permitiendo trabajar como si tuviéramos una API.  
 
-👉 Con esto, el archivo data.json funciona como nuestra "base de datos simulada" en el frontend.
+(ver ejemplos `/leer_json`)  
 
-## Simulación de backend con localStorage 
+👉 Con esto, `data.json` funciona como nuestra “base de datos simulada” en el frontend.  
 
-El localStorage es una herramienta del navegador que permite guardar datos de forma sencilla y persistente en pares de clave y valor. A diferencia de las variables normales, los datos almacenados en localStorage no se pierden al recargar la página o cerrar el navegador; permanecen disponibles hasta que se eliminan manualmente. Esto lo convierte en una opción muy útil para simular un backend en aplicaciones frontend, ya que podemos guardar y recuperar información como si fuese una pequeña base de datos local.
-Con localStorage.setItem(clave, valor) almacenamos información, y con localStorage.getItem(clave) la recuperamos. Normalmente, para trabajar con objetos y arrays, utilizamos JSON.stringify() al guardarlos y JSON.parse() al leerlos.
- 
-Ver ejemplos /4_localstorage
+---
 
+## Simulación de backend con localStorage
+
+El **localStorage** permite guardar datos de forma persistente en pares clave-valor. A diferencia de las variables normales, los datos en localStorage no se pierden al recargar la página o cerrar el navegador.  
+
+Es útil para simular un backend, ya que permite guardar y recuperar información como si fuese una pequeña base de datos local.  
+
+- Guardar: `localStorage.setItem(clave, valor)`  
+- Recuperar: `localStorage.getItem(clave)`  
+- Para objetos y arrays: usar `JSON.stringify()` al guardar y `JSON.parse()` al leer.  
+
+Ver ejemplos `/4_localstorage`  
+
+---
 
 ## Mockapi
 
-- https://mockapi.io/projects
+- Web: [https://mockapi.io/projects](https://mockapi.io/projects)  
 
-Mopckapi es un servicio de base de datos en la nube gratuita que nos permite crear endpoints para simular una base de datos. 
-En la web de mockapi hay ejemplos de código para consumir la api
+Mockapi es un servicio gratuito de base de datos en la nube que permite crear endpoints para simular una API.  
+Ejemplos de código: [https://github.com/mockapi-io/docs/wiki/Code-examples](https://github.com/mockapi-io/docs/wiki/Code-examples)  
 
-https://github.com/mockapi-io/docs/wiki/Code-examples
-
-Podemos ver un ejemplo en 5_ejemplos_mockapi donde se visualizan los datos que provienen de un .json
-Se ha creado partiendo de la plantilla de vue vacia
-
-```
+En `5_ejemplos_mockapi` se muestra cómo visualizar datos de un `.json` partiendo de una plantilla de Vue vacía:  
+```bash
 npm create vue@latest
-```
+```  
 
-Usando mockapi incluso podemos hacer el frontend para crear o borrar datos (utilizando el comando POST)
-Los datos son persistentes, no como en el caso de localstorage
+Con Mockapi podemos crear y borrar datos desde el frontend (comando POST). Los datos son persistentes, a diferencia de localStorage.  
 
-
+---
 
 ## Introducción a Firebase
 
-Para aplicaciones reales necesitamos un backend de lectura/escritura más potente y con otras funcionalidades.
-Firestore es un servicio de base de datos de Google en la nube que forma parte de Firebase 
-Una de sus ventajas es que tiene un ajuste de escala automático (adapta automáticamente los recursos a lo que necesita)
-Es gratuito si el uso es limitado 
+Para aplicaciones reales necesitamos un backend más potente con lectura/escritura y otras funcionalidades.  
 
+**Firestore** es un servicio de base de datos en la nube de Google (parte de Firebase).  
+- Escala automáticamente  
+- Gratuito si el uso es limitado  
 
-https://firebase.google.com/
+Web: [https://firebase.google.com/](https://firebase.google.com/)  
 
-Video introducción a Firebase 
-https://www.youtube.com/watch?v=p9pgI3Mg-So&t=3s
+Video introductorio: [https://www.youtube.com/watch?v=p9pgI3Mg-So&t=3s](https://www.youtube.com/watch?v=p9pgI3Mg-So&t=3s)  
 
-Realtime database es otro servicio de datos con otras características (mas pensado para optimizar la velocidad)
+Otros servicios:  
+- **Realtime Database**: optimizado para velocidad  
+- **Storage**: almacenar archivos  
 
-Storage sirve para almacenar archivos. 
+Debemos crear una cuenta y activar Firestore (datos en JSON) y Storage (imágenes y archivos).  
 
-Debemos crear una cuenta y activar los servicios Firestore database (para almacenar nuestros datos en json) y Storage (para poder subir las imágenes y archivos descargables).
+---
 
+## Backend de escritura
 
-## Backend de escritura 
+Firestore permite **leer y escribir** datos.  
+Una aplicación natural sería un backoffice para gestionar los datos del portfolio.  
 
-Una de las ventajas de firestore es que no solo sirve para "leer" datos sino que también nos permite "escribir"
-Una aplicación natural teniendo en cuenta esto seria crear un backoffice para gestionar los datos del portfolio.
+---
 
 ## Firebase storage para almacenar archivos
 
-Como almacenar archivos y conceptos más avanzados 
+Permite almacenar archivos y manejar conceptos más avanzados de backend.  
 
-## Otros aspectos de firebase
+---
 
-- Permite gestionar la autenticación
-- Permite acceso a estadísticas de uso
+## Otros aspectos de Firebase
+
+- Gestión de autenticación  
+- Acceso a estadísticas de uso  
+
+---
 
 ## Bonus: Algunos ejemplos de servicios de Inteligencia Artificial
 
-- Ver ejemplos en /7_inteligencia_artificial
+- Ver ejemplos en `/7_inteligencia_artificial`  
+- **DeepAI**: generar imágenes a partir de texto: [https://deepai.org/](https://deepai.org/)  
+- **Replicate**: llamar a modelos de IA para generar imágenes, texto, etc.: [https://replicate.com/](https://replicate.com/)  
 
-- DeepAI 
-Es un servicio de IA que nos permite generar imágenes a partir de texto. 
-https://deepai.org/
-- Replicate
-https://replicate.com/
-Es un servicio de IA que nos permite llamar a modelos de IA para generar imágenes, texto, etc.
+---
 
 ## Tarea
 
-A partir de nuestra maquetación del portfolio crear una SPA/PWA de manera que además de la página de inicio tenga la página única de cada proyecto y una pàgina de contacto.
-Vincularlo con la base de datos en mockapi (u otro sistema equivalente) de manera que podamos editar los proyectos ahi. 
-Convertirla en PWA creando un manifest.json.
-Más en concreto debe tener las siguientes funcionalidades:
-- Página de inicio donde se muestran todos los proyectos, cada uno de ellos con un enlace que te lleva a ver los detalles
-- Página de contacto
-- Menú de navegación con las opciones: Inicio, Contacto
-- Debe funcionar como una SPA
-- Página de cada proyecto con más información
-- Convertirlo en PWA (simplemente añadir un manifest.json)
+A partir de la maquetación del portfolio, crear una **SPA/PWA** que tenga:  
+- Página de inicio con todos los proyectos, cada uno enlazando a su detalle  
+- Página de contacto  
+- Menú de navegación: Inicio, Contacto  
+- Funcionamiento como SPA  
+- Página de cada proyecto con más información  
+- Convertirla en PWA añadiendo `manifest.json`  
 
-(Se puede utilizar como punto de partida el ejemplo vue_spa)
+Vincular la app con la base de datos en Mockapi (u otro sistema equivalente) para poder editar los proyectos.  
 
-
+> Se puede usar como punto de partida el ejemplo `vue_spa`.
