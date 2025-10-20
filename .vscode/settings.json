@@ -18,5 +18,7 @@
         "titleBar.inactiveBackground": "#6c9a0499",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#6c9a04"
+    "peacock.color": "#6c9a04",
+    "mcpFigma.aiAssistant": "github-copilot",
+    "mcpFigma.autoStartWebSocket": true
 }
