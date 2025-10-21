@@ -8,6 +8,9 @@ Aprende los conceptos esenciales de **Git**
 
 https://git-scm.com/book/es/v2/Inicio---Sobre-el-Control-de-Versiones-Instalaci%c3%b3n-de-Git
 
+Github es el servicio más conocido de alojamiento de repositorios Git pero no es el único.
+Este mismo archivo está en https://github.com/danieljulia/shifta_javascript_avanzado/blob/main/bloque_5/bloque_5_semana_4_intro_git.md
+
 
 
 
@@ -44,7 +47,6 @@ https://git-scm.com/book/es/v2/Inicio---Sobre-el-Control-de-Versiones-Instalaci%
   **Clone / Pull / Push**                   Acciones para bajar o subir
                                             cambios entre tu equipo y el
                                             repositorio remoto.
-  -----------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
@@ -151,16 +153,15 @@ git merge nueva-rama
   `node_modules`)                 
 
   Clonar un repositorio existente `git clone https://github.com/usuario/repositorio.git`
-  ----------------------------------------------------------------------------------------
-
+  
 ------------------------------------------------------------------------
 
 ## **7. Flujo de trabajo típico (GitHub Flow)**
 
-1.  `git pull` → para actualizar tu copia local.\
-2.  `git checkout -b nueva-funcionalidad`\
-3.  Realiza cambios y haz commits.\
-4.  `git push origin nueva-funcionalidad`\
+1.  `git pull` → para actualizar tu copia local.
+2.  `git checkout -b nueva-funcionalidad`
+3.  Realiza cambios y haz commits.
+4.  `git push origin nueva-funcionalidad`
 5.  Abre un **Pull Request** en GitHub para revisar y fusionar.
 
 ------------------------------------------------------------------------
@@ -197,14 +198,14 @@ git config --list
 
 ## **10. Aprender más**
 
--   [Pro Git (libro gratuito)](https://git-scm.com/book/es/v2)\
--   [Try GitHub (tutorial interactivo)](https://try.github.io)\
+-   [Pro Git (libro gratuito)](https://git-scm.com/book/es/v2)
+-   [Try GitHub (tutorial interactivo)](https://try.github.io)
 
 ------------------------------------------------------------------------
 
-# ¿Necesito configurar claves SSH para hacer *push*?
+## ¿Necesito configurar claves SSH para hacer *push*?
 
-**No siempre**, depende de cómo te conectes al repositorio remoto.\
+**No siempre**, depende de cómo te conectes al repositorio remoto.
 Git permite dos formas principales de autenticación: **HTTPS** y
 **SSH**.
 

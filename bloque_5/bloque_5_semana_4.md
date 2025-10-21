@@ -176,8 +176,9 @@ Una vez activado, se pueden comprobar los datos en tiempo real en el panel de Go
 ## Tarea
 
 Como práctica, se propone:  
-- Añadir analítica web al proyecto anterior (portfolio con Vue.js) o cualquier otro proyecto.  
+- Añadir analítica web a un proyecto web que tengáis hecho (portfolio con Vue.js o cualquier otro proyecto)
 - Publicarlo en **Netlify**.  
+- Comprobar que funciona el registro de visitas en tiempo real.  
 - Entregar un documento con:  
   - La **URL de la web publicada**.  
   - Una **captura de pantalla** del panel de Google Analytics mostrando la información en tiempo real durante una visita.  
