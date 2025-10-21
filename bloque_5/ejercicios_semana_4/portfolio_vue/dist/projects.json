@@ -1,0 +1,35 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "E-Commerce Website",
+      "description": "A fully responsive e-commerce platform built with modern web technologies. Features include user authentication, shopping cart functionality, payment integration, and admin dashboard. The project showcases clean UI/UX design and efficient backend architecture.",
+      "image": "/images/ecommerce.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Task Management App",
+      "description": "A collaborative task management application designed for teams. Users can create projects, assign tasks, set deadlines, and track progress. The app includes real-time notifications, file sharing capabilities, and comprehensive reporting features.",
+      "image": "/images/taskapp.jpg"
+
+    },
+    {
+      "id": 3,
+      "name": "Weather Dashboard",
+      "description": "An interactive weather dashboard that provides current conditions and forecasts for multiple cities. Features include location-based weather, interactive maps, weather alerts, and historical data visualization with beautiful charts and graphs.",
+      "image": "/images/weather.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Social Media Analytics",
+      "description": "A comprehensive analytics platform for social media managers. The tool aggregates data from multiple platforms, provides detailed insights, generates automated reports, and offers predictive analytics to help optimize social media strategies.",
+      "image": "/images/social.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Mobile Banking App",
+      "description": "A secure mobile banking application with biometric authentication, real-time transaction monitoring, and advanced security features. The app provides seamless user experience with intuitive navigation and comprehensive financial management tools.",
+      "image": "/images/banking.jpg"
+    }
+  ]
+}
