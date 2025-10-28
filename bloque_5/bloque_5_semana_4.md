@@ -125,15 +125,74 @@ Existen dos tipos principales de métricas en una web:
 
 ### Métricas técnicas (de rendimiento)
 
-Algunas métricas clave:  
-- **LCP (Largest Contentful Paint):** tiempo en que se muestra el contenido principal.  
-- **FID (First Input Delay):** retraso tras la primera interacción del usuario.  
-- Tiempo de renderizado.  
 
-**Herramientas útiles:**  
-- Chrome DevTools  
-- Google Lighthouse  
-- PageSpeed Insights  
+### LCP — *Largest Contentful Paint*
+- **Qué mide:** el tiempo que tarda en mostrarse el elemento más grande visible en la pantalla (imagen, bloque de texto, video, etc.).
+- **Por qué importa:** afecta directamente la **percepción de carga** de la página.
+- **Objetivo:** que ocurra antes de **2.5 segundos**.
+- **Cómo mejorar:**
+  - Optimizar imágenes (usar formatos como WebP/AVIF).
+  - Usar *lazy loading*.
+  - Mejorar el tiempo de respuesta del servidor.
+  - Evitar render-blocking (scripts o CSS pesados en el `<head>`).
+
+---
+
+###  FID — *First Input Delay*
+- **Qué mide:** el tiempo entre que el usuario **interactúa** (clic, toque, tecla) y el navegador **responde**.
+- **Por qué importa:** refleja la **interactividad** real.
+- **Objetivo:** menos de **100 ms**.
+- **Cómo mejorar:**
+  - Dividir JavaScript en *chunks* más pequeños.
+  - Evitar tareas largas que bloqueen el *main thread*.
+  - Usar *web workers* para procesos pesados.
+  - Implementar *code splitting* con herramientas como Webpack o Vite.
+
+---
+
+### Tiempo de renderizado
+- **Qué mide:** el tiempo total que tarda el navegador en **pintar y renderizar** el contenido.
+- **Por qué importa:** influye en la **suavidad y fluidez** de la experiencia.
+- **Cómo mejorar:**
+  - Minimizar el número de *reflows* y *repaints*.
+  - Evitar cambios de estilo en bucles (`for`, `while`).
+  - Usar `transform` y `opacity` para animaciones en lugar de `top`, `left` o `width`.
+  - Reducir el tamaño y la complejidad del DOM.
+
+---
+
+## Herramientas para medir rendimiento
+
+### Chrome DevTools
+- **Dónde:** `Ctrl + Shift + I` → pestaña **Performance**.  
+- **Qué permite hacer:**
+  - Grabar el rendimiento en tiempo real.
+  - Ver los tiempos de carga, renderizado y ejecución de scripts.
+  - Identificar *frames* lentos, tareas largas o *layout shifts*.
+
+---
+
+### Lighthouse
+- **Integrado en Chrome DevTools.**
+- **Qué mide:** rendimiento, accesibilidad, SEO, buenas prácticas.
+- **Cómo usarlo:**
+  1. Abre DevTools → pestaña **Lighthouse**.
+  2. Selecciona “Performance”.
+  3. Genera el informe.
+- **Ventajas:**
+  - Da una puntuación del 0 al 100.
+  - Muestra recomendaciones concretas (por ejemplo: “Elimina recursos que bloquean el renderizado”).
+
+---
+
+### PageSpeed Insights
+- **URL:** [https://pagespeed.web.dev/](https://pagespeed.web.dev/)
+- **Qué ofrece:**
+  - Analiza el rendimiento en **móvil** y **escritorio**.
+  - Muestra métricas reales (*field data*).
+  - Proporciona sugerencias de optimización y diagnósticos.
+- **Ideal para:** comparar resultados de producción y obtener datos de usuarios reales (CrUX).
+
 
 ### Métricas de experiencia de usuario (UX Metrics)
 
