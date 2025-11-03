@@ -1,16 +1,37 @@
-
-
 # Bloque 1. Semana 2. Herramientas avanzadas
 
-Índice
+## Índice
 
-1. Control de versiones: Git / Github 
-2. Entorno/Herramientas de desarrollo: localhost
-3. Editores de código (IDE), inspector del navegador
-4. Principios básicos de accesibilidad y web semántica, SEO, desde el punto de vista de la programación
-5. IA para la generación de código / GitHub Copilot
+1. [Control de versiones: Git / GitHub](#1-control-de-versiones-git--github)
+   - [El terminal del sistema operativo](#el-terminal-del-sistema-operativo)
+   - [Introducción a Git: conceptos básicos, instalación y configuración](#introducción-a-git-conceptos-básicos-instalación-y-configuración)
+   - [¿Para qué sirve Git?](#para-qué-sirve-git)
+   - [Clonar y trabajar con un repositorio](#clonar-y-trabajar-con-un-repositorio)
+   - [Claves ssh en github](#claves-ssh-en-github)
+   - [Creando nuestro repositorio y publicando contenido](#creando-nuestro-repositorio-y-publicando-contenido)
+   - [Comandos esenciales de git](#comandos-esenciales-de-git)
+   - [Repositorio de este curso](#repositorio-de-este-curso)
+2. [Entorno/Herramientas de desarrollo: localhost](#2-entornoherramientas-de-desarrollo-localhost)
+   - [Configuración de localhost](#configuración-de-localhost)
+   - [Otros posibles entornos de desarrollo](#otros-posibles-entornos-de-desarrollo)
+3. [Editores de código (IDE), inspector del navegador](#3-editores-de-código-ide-inspector-del-navegador)
+   - [Editores de código (IDE)](#editores-de-código-ide)
+   - [Inspector del navegador](#inspector-del-navegador)
+4. [Principios básicos de accesibilidad y web semántica, SEO](#4-principios-básicos-de-accesibilidad-y-web-semántica-seo-desde-el-punto-de-vista-de-la-programación)
+   - [Accesibilidad](#accesibilidad)
+   - [Web semántica](#web-semántica)
+   - [SEO desde el punto de vista de la programación](#seo-desde-el-punto-de-vista-de-la-programación)
+   - [Herramientas](#herramientas)
+5. [IA para la generación de código / GitHub Copilot](#5-ia-para-la-generación-de-código--github-copilot)
+   - [Introducción a la IA en el desarrollo de software](#introducción-a-la-ia-en-el-desarrollo-de-software)
+   - [GitHub Copilot](#github-copilot)
+   - [Cursor: el IDE colaborativo para desarrollo](#cursor-el-ide-colaborativo-para-desarrollo)
+   - [Otras herramientas de IA para programación](#otras-herramientas-de-ia-para-programación)
+   - [Límites y potencial de la IA en la generación de código](#límites-y-potencial-de-la-ia-en-la-generación-de-código)
 
-## 1. Control de versiones: Git / GitHub
+---
+
+# 1. Control de versiones: Git / GitHub
 
 
 ### El terminal del sistema operativo
@@ -19,6 +40,25 @@ El terminal (command prompt) es una interfaz de línea de comandos (CLI) que per
 
 Existen versiones más avanzadas del terminal "por defecto" en el sistema operativo, por ejemplo PowerShell en Windows o iTerm en Mac.
 
+Git for windows por ejemplo incluye una versión de git y una terminal más avanzada. 
+https://gitforwindows.org/
+
+### Algunos comandos del terminal
+
+| Comando                  | Descripción                                      | Notas / Ejemplo de uso                                  |
+|--------------------------|--------------------------------------------------|---------------------------------------------------------|
+| `pwd`                    | Muestra la ruta del directorio actual             | "Print Working Directory"                              |
+| `ls`                     | Lista los archivos y carpetas del directorio      | `ls -l` para lista detallada, `ls -a` para ocultos      |
+| `cd <ruta>`              | Cambia de directorio                             | `cd ..` sube un nivel                                   |
+| `mkdir <nombre>`         | Crea un directorio                               | `mkdir -p carpeta/subcarpeta` crea varias a la vez      |
+| `rmdir <nombre>`         | Elimina un directorio vacío                      | Para directorios con contenido usar `rm -r <nombre>`    |
+| `rm <archivo>`           | Elimina un archivo                               | `rm -r <carpeta>` para carpetas con contenido           |
+| `cp <origen> <destino>`  | Copia archivos o carpetas                        | `cp -r carpeta1 carpeta2` para copiar carpetas completas|
+| `mv <origen> <destino>`  | Mueve o renombra archivos/carpeta                |                                                         |
+| `touch <archivo>`        | Crea un archivo vacío                            | Útil para scripts o notas rápidas                       |
+| `cat <archivo>`          | Muestra el contenido de un archivo                | `less <archivo>` para ver archivos grandes              |
+| `echo "texto"`          | Muestra texto en pantalla                        | Útil para mensajes o scripts                            |
+| `clear`                  | Limpia la pantalla                               | También `Ctrl+L`                                        |
 
 ###  Introducción a Git: conceptos básicos, instalación y configuración
 
@@ -58,9 +98,9 @@ Vamos a clonar el repositorio con el material del curso
 Nos situamos en algún directorio en nuestro ordenador usando el terminal y escribimos la siguiente instrucción
 
 ```
-git clone git@github.com:danieljulia/shifta2024.git
+git clone git@github.com:danieljulia/shifta_javascript_avanzado.git
 ```
-Esto ejemplo clona  el repositorio que está en https://github.com/danieljulia/shifta2024
+Esto ejemplo clona  el repositorio que está en https://github.com/danieljulia/shifta_javascript_avanzado
 
 De la misma manera podemos clonar cualquier repositorio publico.
 
@@ -71,7 +111,7 @@ Entonces podemos empezar a trabajar y hacer cosas como
 + Hacer un commit de los cambios, añadir los cambios al repositorio con 
 git commit -m 'un comentario'
 
-También podriamos dsubir los cambios al repositorio remoto con git push, pero para ello debemos registrar una clave en la configuración de github.
+También podriamos subir los cambios al repositorio remoto con git push, pero para ello debemos registrar una clave en la configuración de github.
 
 
 ### Claves ssh en github 
@@ -161,12 +201,14 @@ WSL en Windows
 https://www.youtube.com/watch?v=L4f1XHrSJEg
 
 Otros posibles entornos de desarrollo
-- Maquinas virtuales
-- Docker (gestor de contenedores)
-- Entorno de desarrollo en un servidor remoto
+- Máquinas virtuales: permiten simular sistemas completos para pruebas o desarrollo seguro.
+- Docker (gestor de contenedores): facilita la creación de entornos reproducibles y portables.
+- Entorno de desarrollo en un servidor remoto: útil para proyectos colaborativos o con necesidades de hardware específicas.
+- Servicios en la nube: como GitHub Codespaces, Replit, Glitch, etc.
+
+**Consejo:** Elige el entorno que mejor se adapte a tu flujo de trabajo y necesidades del proyecto.
 
 ## 3. Editores de código (IDE), inspector del navegador
-
 
 ### Editores de código (IDE)
 
@@ -175,6 +217,7 @@ Otros posibles entornos de desarrollo
   - Visual Studio Code
   - Sublime Text
   - WebStorm
+  - Cursor, orientado a IA
 
 Vamos a usar Visual Studio Code (VSC)
 VSC es de propiedad de Microsoft, igual que github.
@@ -193,6 +236,11 @@ Ventajas de VSC (y otros editores)
 - Multiplataforma 
 - Gratuito y de código abierto 
 
+#### Consejos para elegir un editor
+- Prueba varios y elige el que te resulte más cómodo.
+- Aprovecha los atajos de teclado para ser más productivo.
+- Instala extensiones útiles para tu stack de desarrollo.
+
 ### Inspector del navegador
 
 - Herramientas de desarrollador en Chrome, Firefox, y Safari
@@ -208,6 +256,13 @@ https://www.youtube.com/watch?v=lv88bCi7eyg
 
 > Atajos de teclado en VSC
 https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
+
+#### Funcionalidades avanzadas del navegador para desarrollo
+
+- Simulación de dispositivos móviles
+- Análisis de accesibilidad
+- Performance profiling
+- Network throttling (simular conexiones lentas)
 
 ## 4. Principios básicos de accesibilidad y web semántica, SEO, desde el punto de vista de la programación
 
@@ -233,39 +288,16 @@ https://www.w3.org/WAI/quicktips/
 
 5. Organización de la página: Utiliza encabezados, listas y una estructura consistente. Emplea CSS para el diseño y el estilo cuando sea posible.
 
-6. Gráficos y diagramas: Resume el contenido o utiliza el atributo "longdesc" para descripciones más detalladas.
+etc
 
-7. Scripts, applets y complementos: Proporciona contenido alternativo en caso de que las funciones activas no sean accesibles o no estén soportadas.
+#### Buenas prácticas adicionales
 
-8. Marcos (frames): Usa el elemento "noframes" y títulos significativos.
+- Usa colores con suficiente contraste https://app.contrast-finder.org/result.html?foreground=rgb%2870%2C136%2C71%29&background=%23DFF0D8&ratio=4.5&isBackgroundTested=false&algo=Rgb&lang=es
 
-9. Tablas: Organiza el contenido de forma que pueda leerse línea por línea de manera coherente. Proporciona un resumen.
-
-10. Revisa tu trabajo: Valida el contenido. Utiliza herramientas, listas de verificación y guías
-
-### Herramientas que podemos utilizar 
-
-- Análisis de accesibilidad
-https://www.accessibilitychecker.org/
-
-
-- Validador de html y css
-https://validator.w3.org/
-
-- Listado de herramientas 
-http://www.w3.org/TR/WCAG
-
-
-Existen 3 niveles de accesibilidad
-- Nivel A (Básico)
-- Nivel AA (intermedio)
-- Nivel AAA (avanzado)
-
-Los atributos ARIA (Accessible Rich Internet Applications) son etiquetasa de html que proporcionan información adicional a tecnologías de asistencia, como lectores de pantalla. Esto permite a las personas con discapacidades navegar y comprender interfaces dinámicas o complejas, como menús interactivos o controles personalizados, que no siempre son accesibles con HTML estándar. Los atributos ARIA incluyen roles (para definir el tipo de elemento), propiedades (para describir su contexto) y estados (para indicar condiciones como “expandido” o “seleccionado”), mejorando así la navegación y usabilidad en entornos web.
-
-Video: Curso de accesibilidad (6 videos cortos)
-https://www.youtube.com/watch?v=wY8hC5wCNIE
-
+- Asegúrate de que los formularios sean navegables con teclado
+- Añade descripciones a los enlaces y botones
+- Utiliza etiquetas `<label>` asociadas a los campos de formulario
+- etc
 
 ### Web semántica
 
@@ -273,7 +305,19 @@ Se refiere al uso apropiado de etiquetas HTML5 de manera que se pueda entender s
 Es posible construir un web entero usando solo etiquetas ```<div>``` pero una web semántica debe usar etiquetas con sentido como ``` header, nav, main, article, section, aside, footer, figure,``` etc 
 Usar HTML semántico mejora la accesibilidad, facilita la indexación por motores de búsqueda y da una estructura más lógica al contenido de una página.
 
-
+#### Ejemplo de estructura semántica
+```html
+<header>
+  <nav>...</nav>
+</header>
+<main>
+  <article>
+    <section>...</section>
+  </article>
+  <aside>...</aside>
+</main>
+<footer>...</footer>
+```
 
 ### SEO desde el punto de vista de la programación
 
@@ -285,7 +329,6 @@ Existen 4 aspectos a tratar para conseguir un buen posicionamiento
 
 2- Un contenido de calidad siempre será más relevante para los buscadores 
 
-
 3 - A nivel técnico que la web se cargue rápido y las imágenes estén optimizadas, que el diseño responsive funcione bien, beneficia también al SEO
 
 4 - Finalmente es bueno aumentar la reputación del sitio consiguiendo menciones de calidad (links) en otros sitios web
@@ -295,6 +338,13 @@ Un sitemap (un documento xml que describa la estructura de la web) también es b
 > Más información. Guia SEO de google
 https://developers.google.com/search/docs/fundamentals/seo-starter-guide?hl=es
 
+#### Consejos extra
+
+- Usa títulos únicos y descriptivos en cada página (`<title>`)
+- Añade meta descripciones relevantes
+- Optimiza imágenes con atributos `alt` y tamaños adecuados
+- Utiliza URLs amigables y estructuradas, cada contenido relevante debe tener su propia url
+
 ### Herramientas 
 
 - Google search console (para optimizar a partir de un sitemap)
@@ -303,10 +353,6 @@ https://search.google.com/search-console/about
 https://developers.google.com/analytics?hl=es
 - Seoptimer (herramienta para auditar webs)
 https://www.seoptimer.com/
-
-- Otras herramientas
-
-
 
 ## 5. IA para la generación de código / GitHub Copilot
 
@@ -319,7 +365,6 @@ Herramientas de IA como GitHub Copilot o ChatGPT  funcionan como “compañeros 
 
 ### GitHub Copilot
 
-
 Existe una versión de educación de Github copilot para estudiantes 
 https://education.github.com/discount_requests/application?type=student
 También existe una versión de prueba de 30 dias 
@@ -330,6 +375,29 @@ https://code.visualstudio.com/docs/copilot/setup
 
 - Video introducción a github copilot 
 https://www.youtube.com/watch?v=2q0BoioYSxQ
+
+#### Ejemplos de uso de Copilot
+- Autocompletar funciones y fragmentos de código
+- Generar tests automáticamente
+- Sugerir documentación para funciones
+- Refactorizar código existente
+
+### Cursor: el IDE colaborativo para desarrollo
+
+Cursor es un "fork" de Visual Studio Code pensado para desarrollo colaborativo y con inteligencia artificial integrada. Permite a varios desarrolladores editar, depurar y revisar código en tiempo real, desde cualquier lugar, de forma similar a cómo Google Docs permite la edición colaborativa de documentos.
+
+**Características principales:**
+
+- Trabaja en modo agente (vibe coding)
+- Chat y comentarios integrados: facilita la comunicación y revisión de código dentro del propio IDE.
+- Soporte para extensiones y plugins: compatible con muchas extensiones populares de Visual Studio Code.
+- Integración con Git: gestión de ramas, commits y revisiones directamente desde la interfaz.
+
+**Recursos:**
+
+- [Web oficial de Cursor](https://www.cursor.so/)
+- [Guía de inicio rápido](https://docs.cursor.so/)
+- [Comparativa con otros IDEs colaborativos](https://www.cursor.so/blog/collaborative-ide-comparison)
 
 
 ### Otras herramientas de IA para programación
@@ -342,10 +410,5 @@ https://claude.ai/new
 https://gemini.google.com/
 - NotebookLM 
 https://notebooklm.google/
-
-
-### Límites y potencial de la IA en la generación de código
- 
-La IA todavía comete errores en lógica compleja o cuando las instrucciones son ambiguas. Además, tiende a reproducir patrones comunes y podría no ofrecer soluciones novedosas para problemas específicos. Aun así, combinada con supervisión humana, es una herramienta poderosa que puede mejorar la productividad y creatividad en el desarrollo
 
 
