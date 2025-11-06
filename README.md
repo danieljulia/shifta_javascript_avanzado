@@ -1,4 +1,5 @@
 # Módulo Javascript avanzado. Shifta
 
 Apuntes para el curso de Javascript avanzado en Shifta
-Última actualización: Octubre 2025
+Última actualización: Noviembre 2025
+Otra linea
