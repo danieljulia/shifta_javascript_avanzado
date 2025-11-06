@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+    
+    <!-- Viewport for responsive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary meta tags for SEO -->
+    <title>Your Website Title - Descriptive and Keyword Rich</title>
+    <meta name="description" content="A comprehensive description of your website content, including relevant keywords. Keep it between 150-160 characters for optimal SEO.">
+    <meta name="keywords" content="keyword1, keyword2, keyword3, relevant terms">
+    <meta name="author" content="Your Name">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.yourwebsite.com/">
+    <meta property="og:title" content="Your Website Title - Descriptive and Keyword Rich">
+    <meta property="og:description" content="A comprehensive description of your website content, including relevant keywords.">
+    <meta property="og:image" content="https://placehold.co/1200x630/4A90E2/FFFFFF?text=Website+Preview">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.yourwebsite.com/">
+    <meta property="twitter:title" content="Your Website Title - Descriptive and Keyword Rich">
+    <meta property="twitter:description" content="A comprehensive description of your website content, including relevant keywords.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/4A90E2/FFFFFF?text=Website+Preview">
+    
+    <!-- Canonical URL to avoid duplicate content -->
+    <link rel="canonical" href="https://www.yourwebsite.com/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header with semantic HTML -->
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <h1>Your Website Title</h1>
+        <p>Your tagline or brief description</p>
+    </header>
+    
+    <!-- Main content area -->
+    <main id="main-content" role="main">
+        <!-- Hero section -->
+        <section aria-labelledby="hero-heading">
+            <h2 id="hero-heading">Welcome to Our Website</h2>
+            <img 
+                src="https://placehold.co/800x400/4A90E2/FFFFFF?text=Hero+Image" 
+                alt="Descriptive alt text explaining what the image shows - important for SEO and accessibility"
+                width="800"
+                height="400"
+                loading="lazy"
+            >
+            <p>This is the hero section with compelling content about your website.</p>
+        </section>
+        
+        <!-- About section -->
+        <section aria-labelledby="about-heading">
+            <h2 id="about-heading">About Us</h2>
+            <p>Information about your company or organization. Use clear, descriptive language.</p>
+            
+            <figure>
+                <img 
+                    src="https://placehold.co/600x400/50C878/FFFFFF?text=About+Us" 
+                    alt="Team members working together in a modern office environment"
+                    width="600"
+                    height="400"
+                    loading="lazy"
+                >
+                <figcaption>Our team collaborating on innovative projects</figcaption>
+            </figure>
+        </section>
+        
+        <!-- Services section -->
+        <section aria-labelledby="services-heading">
+            <h2 id="services-heading">Our Services</h2>
+            
+            <article>
+                <h3>Service One</h3>
+                <img 
+                    src="https://placehold.co/400x300/FF6B6B/FFFFFF?text=Service+One" 
+                    alt="Visual representation of Service One - detailed description"
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                >
+                <p>Description of service one and its benefits.</p>
+            </article>
+            
+            <article>
+                <h3>Service Two</h3>
+                <img 
+                    src="https://placehold.co/400x300/4ECDC4/FFFFFF?text=Service+Two" 
+                    alt="Visual representation of Service Two - detailed description"
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                >
+                <p>Description of service two and its benefits.</p>
+            </article>
+            
+            <article>
+                <h3>Service Three</h3>
+                <img 
+                    src="https://placehold.co/400x300/FFA07A/FFFFFF?text=Service+Three" 
+                    alt="Visual representation of Service Three - detailed description"
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                >
+                <p>Description of service three and its benefits.</p>
+            </article>
+        </section>
+        
+        <!-- Contact form section -->
+        <section aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Contact Us</h2>
+            
+            <form action="/submit" method="post" aria-label="Contact form">
+                <fieldset>
+                    <legend>Your Information</legend>
+                    
+                    <label for="name">
+                        Full Name
+                        <span aria-label="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="name-help"
+                    >
+                    <span id="name-help" class="help-text">Please enter your full name</span>
+                    
+                    <label for="email">
+                        Email Address
+                        <span aria-label="required">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="email-help"
+                    >
+                    <span id="email-help" class="help-text">We'll never share your email</span>
+                    
+                    <label for="message">
+                        Message
+                        <span aria-label="required">*</span>
+                    </label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="5" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="message-help"
+                    ></textarea>
+                    <span id="message-help" class="help-text">Please provide details about your inquiry</span>
+                    
+                    <button type="submit" aria-label="Submit contact form">Send Message</button>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <nav aria-label="Footer navigation">
+            <ul>
+                <li><a href="#privacy">Privacy Policy</a></li>
+                <li><a href="#terms">Terms of Service</a></li>
+                <li><a href="#sitemap">Sitemap</a></li>
+            </ul>
+        </nav>
+        
+        <p>&copy; <time datetime="2024">2024</time> Your Company Name. All rights reserved.</p>
+        
+        <address>
+            Contact us at <a href="mailto:info@example.com">info@example.com</a>
+        </address>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="script.js" defer></script>
+</body>
+</html>
+
