@@ -395,10 +395,8 @@ Cursor es un "fork" de Visual Studio Code pensado para desarrollo colaborativo y
 
 **Recursos:**
 
-- [Web oficial de Cursor](https://www.cursor.so/)
-- [Guía de inicio rápido](https://docs.cursor.so/)
-- [Comparativa con otros IDEs colaborativos](https://www.cursor.so/blog/collaborative-ide-comparison)
-
+- [Web oficial de Cursor](https://cursor.com)
+- [Guía de inicio rápido](https://docs.cursor.com/es/get-started/quickstart)
 
 ### Otras herramientas de IA para programación
 
