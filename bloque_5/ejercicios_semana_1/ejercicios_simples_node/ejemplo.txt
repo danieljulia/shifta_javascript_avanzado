@@ -1,0 +1,1 @@
+Esto es el texto que hay en el archivo ejemplo.txt

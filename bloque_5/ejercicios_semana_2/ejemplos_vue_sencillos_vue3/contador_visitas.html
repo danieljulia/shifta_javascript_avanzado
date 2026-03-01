@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador de Visitas - Vue 3</title>
+  <!-- CDN de Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <h2>Contador de Visitas</h2>
+    <p>Has visitado esta página {{ visits }} veces durante esta sesión.</p>
+  </div>
+
+  <script>
+    // Desestructuramos createApp de Vue 3
+    const { createApp } = Vue;
+
+    // Creamos la aplicación Vue 3
+    createApp({
+      // Función data que devuelve el estado reactivo
+      data() {
+        return {
+          visits: 0  // Número de visitas inicializado en 0
+        }
+      },
+      // Hook del ciclo de vida created se ejecuta cuando la instancia es creada
+      created() {
+        // Verificamos si ya existe un valor guardado en localStorage
+        if (localStorage.getItem('visits')) {
+          // Si existe, lo recuperamos, lo convertimos a número y le sumamos 1
+          this.visits = parseInt(localStorage.getItem('visits')) + 1;
+        } else {
+          // Si no existe, esta es la primera visita
+          this.visits = 1;
+        }
+        // Guardamos el nuevo valor en localStorage
+        localStorage.setItem('visits', this.visits);
+      }
+    }).mount('#app');  // Montamos la aplicación en el elemento con id="app"
+  </script>
+
+</body>
+</html>

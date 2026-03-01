@@ -1,0 +1,16 @@
+{
+    "projects": [
+        {
+            "name": "proyecto 1",
+            "description": "descripcion del proyecto 1",
+            "image": "https://via.placeholder.com/150",
+            "url": "https://google.com"
+        },
+        {
+            "name": "proyecto 2",
+            "description": "descripcion del proyecto 2",
+            "image": "https://via.placeholder.com/150",
+            "url": "https://google.com"
+        }
+    ]
+}

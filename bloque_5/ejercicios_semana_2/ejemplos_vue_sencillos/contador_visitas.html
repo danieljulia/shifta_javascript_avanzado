@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador de Visitas</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <h2>Contador de Visitas</h2>
+    <p>Has visitado esta página {{ visits }} veces durante esta sesión.</p>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          visits: 0
+        }
+      },
+      created() {
+        if (localStorage.getItem('visits')) {
+          this.visits = parseInt(localStorage.getItem('visits')) + 1;
+        } else {
+          this.visits = 1;
+        }
+        localStorage.setItem('visits', this.visits);
+      }
+    });
+  </script>
+
+</body>
+</html>

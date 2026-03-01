@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios con Vue.js</title>
+    <!-- Vue 3 desde CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Usuarios</h1>
+
+      <ul>
+        <li v-for="usuario in usuarios" :key="usuario.email">
+          {{ usuario.nombre }} ({{ usuario.email }})
+        </li>
+      </ul>
+    </div>
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            usuarios: [],
+          };
+        },
+        mounted() {
+          fetch("data.json")
+            .then(response => response.json())
+            .then(data => {
+              this.usuarios = data.usuarios;
+            })
+            .catch(err => {
+              console.error(err.message);
+            });
+        }
+      }).mount("#app");
+    </script>
+  </body>
+</html>

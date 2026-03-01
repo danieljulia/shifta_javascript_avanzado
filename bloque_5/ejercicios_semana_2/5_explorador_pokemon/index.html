@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Explorador Pokémon</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    img { width: 150px; }
+    .pokemon-card { border: 1px solid #ccc; padding: 20px; display: inline-block; margin-top: 20px; border-radius: 10px; }
+    input, button { padding: 5px; font-size: 16px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Explorador Pokémon</h1>
+
+    <input v-model="search" placeholder="Nombre o ID" @keyup.enter="buscarPokemon" />
+    <button @click="buscarPokemon">Buscar</button>
+
+    <div v-if="pokemon" class="pokemon-card">
+      <h2>#{{ pokemon.id }} - {{ pokemon.name.toUpperCase() }}</h2>
+      <img :src="pokemon.sprites.front_default" alt="pokemon">
+      <p>Tipo: <span v-for="t in pokemon.types" :key="t.type.name">{{ t.type.name }} </span></p>
+      <p>HP: {{ pokemon.stats[0].base_stat }} | Ataque: {{ pokemon.stats[1].base_stat }}</p>
+    </div>
+
+    <p v-if="error" style="color:red">{{ error }}</p>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        const pokemon = ref(null);
+        const search = ref('');
+        const error = ref('');
+
+        const buscarPokemon = async () => {
+          if (!search.value) return;
+          try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${search.value.toLowerCase()}`);
+            if (!res.ok) throw new Error('Pokémon no encontrado');
+            pokemon.value = await res.json();
+            error.value = '';
+          } catch (e) {
+            error.value = e.message;
+            pokemon.value = null;
+          }
+        };
+
+        return { pokemon, search, buscarPokemon, error };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue.js Todo List with MockAPI</title>
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Todo List</h1>
+
+      <p> Mockapi 
+        https://mockapi.io
+      </p>
+      <input v-model="newTodo" placeholder="New todo..." @keyup.enter="addTodo" />
+      <button @click="addTodo">Add</button>
+
+      <ul>
+        <li v-for="todo in todos" :key="todo.id">
+          <label>
+            <input type="checkbox" v-model="todo.completed" @change="updateTodo(todo)" />
+            <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
+              {{ todo.name }}
+            </span>
+          </label>
+          <button @click="deleteTodo(todo.id)">❌</button>
+        </li>
+      </ul>
+
+      <p v-if="loading">Loading...</p>
+      <p v-if="error" style="color:red">{{ error }}</p>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            todos: [],
+            newTodo: "",
+            loading: false,
+            error: null,
+            // ⚠️ Replace with your own MockAPI URL:
+            //la url en https://mockapi.io/ debe ser del tipo 
+            //https://xxxxxxxxxx.mockapi.io/api/v1/todos 
+            //suponiendo que el endpoint se llame "todos"
+            apiUrl: "https://67c6b62b351c081993fe62eb.mockapi.io/api/v1/todos"
+          };
+        },
+        mounted() {
+          this.fetchTodos();
+        },
+        methods: {
+          async fetchTodos() {
+            this.loading = true;
+            try {
+              const res = await fetch(this.apiUrl);
+              this.todos = await res.json();
+            } catch (err) {
+              this.error = err.message;
+            } finally {
+              this.loading = false;
+            }
+          },
+          async addTodo() {
+            if (!this.newTodo.trim()) return;
+            const todo = { name: this.newTodo, completed: false };
+            try {
+              const res = await fetch(this.apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(todo)
+              });
+              const saved = await res.json();
+              this.todos.push(saved);
+              this.newTodo = "";
+            } catch (err) {
+              this.error = err.message;
+            }
+          },
+          async updateTodo(todo) {
+            try {
+              await fetch(`${this.apiUrl}/${todo.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(todo)
+              });
+            } catch (err) {
+              this.error = err.message;
+            }
+          },
+          async deleteTodo(id) {
+            try {
+              await fetch(`${this.apiUrl}/${id}`, { method: "DELETE" });
+              this.todos = this.todos.filter(t => t.id !== id);
+            } catch (err) {
+              this.error = err.message;
+            }
+          }
+        }
+      }).mount("#app");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About Me</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="js/app.js"></script> <!-- Load shared components first -->
+</head>
+<body>
+  <div id="app">
+    <site-header></site-header>
+
+    <main>
+      <h1>About Me</h1>
+      <about-section></about-section>
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+
+  <!-- Inline template -->
+  <template id="about-template">
+    <section>
+      <p><strong>{{ name }}</strong></p>
+      <p>{{ bio }}</p>
+      <p>I love learning, teaching, and building clean, elegant web experiences.</p>
+    </section>
+  </template>
+
+  <script>
+    const { createApp } = Vue;
+
+    const AboutSection = {
+      template: '#about-template',
+      data() {
+        return {
+          name: "John Smith",
+          bio: "I'm a web developer passionate about JavaScript, Vue.js, and creative projects."
+        };
+      }
+    };
+
+    // ✅ Now SiteHeader and SiteFooter exist (loaded from app.js)
+    createApp({
+      components: { AboutSection, SiteHeader, SiteFooter }
+    }).mount('#app');
+  </script>
+</body>
+</html>

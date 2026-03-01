@@ -1,0 +1,24 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#8fcc05",
+        "activityBar.background": "#8fcc05",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#0583bb",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#8fcc05",
+        "statusBar.background": "#6c9a04",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#8fcc05",
+        "statusBarItem.remoteBackground": "#6c9a04",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#6c9a04",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#6c9a0499",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#6c9a04",
+    "mcpFigma.aiAssistant": "github-copilot",
+    "mcpFigma.autoStartWebSocket": true
+}

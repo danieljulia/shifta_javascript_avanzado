@@ -1,0 +1,13 @@
+#ignorar archivos .pdf, los documentos estan en .md
+*.pdf
+node_modules/
+
+#para generar los pdfs ejecutar 
+# node tools/convert_to_pdf.js 
+
+# Ignorar todas las carpetas .parcel-cache
+.parcel-cache/
+# Ignorar todas las carpetas de caché similares a .parcel-cache
+**/.parcel-cache/
+
+.codegpt

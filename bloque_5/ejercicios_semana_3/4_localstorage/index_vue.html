@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación Backend con Vue</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>Usuarios</h2>
+    <ul>
+      <li v-for="u in usuarios" :key="u.id">
+        {{ u.nombre }} ({{ u.email }})
+        <button @click="eliminarUsuario(u.id)">❌</button>
+      </li>
+    </ul>
+
+    <input v-model="nuevoNombre" placeholder="Nombre">
+    <input v-model="nuevoEmail" placeholder="Email">
+    <button @click="agregarUsuario">Agregar usuario</button>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          usuarios: [],
+          nuevoNombre: "",
+          nuevoEmail: ""
+        };
+      },
+      mounted() {
+        // Cargar datos de localStorage al iniciar
+        const guardados = localStorage.getItem("usuarios");
+        if (guardados) {
+          this.usuarios = JSON.parse(guardados);
+        } else {
+          // inicialización
+          this.usuarios = [
+            { id: 1, nombre: "Ana", email: "ana@example.com" },
+            { id: 2, nombre: "Luis", email: "luis@example.com" }
+          ];
+          this.guardarUsuarios();
+        }
+      },
+      methods: {
+        guardarUsuarios() {
+          localStorage.setItem("usuarios", JSON.stringify(this.usuarios));
+        },
+        agregarUsuario() {
+          if (!this.nuevoNombre || !this.nuevoEmail) return;
+          this.usuarios.push({
+            id: Date.now(),
+            nombre: this.nuevoNombre,
+            email: this.nuevoEmail
+          });
+          this.guardarUsuarios();
+          this.nuevoNombre = "";
+          this.nuevoEmail = "";
+        },
+        eliminarUsuario(id) {
+          this.usuarios = this.usuarios.filter(u => u.id !== id);
+          this.guardarUsuarios();
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>

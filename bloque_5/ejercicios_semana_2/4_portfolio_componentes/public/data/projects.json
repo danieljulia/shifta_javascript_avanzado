@@ -1,0 +1,26 @@
+[
+    {
+      "id":0,
+      "image": "/images/219-1600x700.jpg",
+      "title": "El Paso del Guepardo!!!",
+      "category": "Fotografía de Naturaleza",
+      "description": "Un instante sublime capturado en la vasta sabana africana, donde la agilidad y la elegancia se encuentran con la serenidad del entorno.",
+      "link": "project-1.html"
+    },
+    {
+        "id":1,
+      "image": "/images/611-1600x700.jpg",
+      "title": "Danza en el Puerto!",
+      "category": "Fotografía Urbana",
+      "description": "Un retrato caótico y vibrante del vuelo de las gaviotas, donde el orden natural se encuentra con el bullicio humano.",
+      "link": "#"
+    },
+    {
+        "id":2,
+      "image": "/images/626-1600x700.jpg",
+      "title": "Luz del Acantilado!",
+      "category": "Pintura Paisajística",
+      "description": "Un faro rojo resalta en un acantilado sereno, donde la naturaleza y la arquitectura se encuentran en un diálogo atemporal.",
+      "link": "#"
+    }
+  ]

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Portfolio</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+</head>
+<body>
+    <div id="app">
+    <header>
+        <h1>{{datos.name}}</h1>
+        <p class="message">{{ message}}</p>
+        <p>{{ datos.descripcion}}</p>
+        <div class="burger" @click="toggleMenu">☰</div>
+        <div v-if="menu_abierto" id="menu" class="menu">
+            <a href="#bio">About</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </header>
+    
+
+    <section id="bio" class="bio">
+        <h2>About the Artist</h2>
+        <p>Brief biography and artistic statement.</p>
+    </section>
+    
+    <section id="gallery" class="gallery">
+
+
+        <a v-for="proyecto in datos.proyectos">
+            <img :src="proyecto.imagen" :alt="proyecto.nombre">
+            <p>{{proyecto.nombre}}</p>
+        </a>  
+      
+
+    </section>
+    
+    <section id="contact" class="contact">
+        <h2>Contact</h2>
+        <p>Email: artist@example.com</p>
+        <p>Social Media Links</p>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Artist Name. All rights reserved.</p>
+    </footer>
+</div>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                message: 'Hello Vue!',
+                menu_abierto: false,
+                datos: {}
+            }
+        },
+        methods: {
+            toggleMenu() {
+                this.menu_abierto = !this.menu_abierto
+                
+            }
+        },
+        mounted() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    this.datos = data;
+                })
+                .catch(error => {
+                    console.error('Error loading data.json:', error);
+                });
+        }
+    })
+    app.mount('#app')
+</script>
+</body>
+</html>

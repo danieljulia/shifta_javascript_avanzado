@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Planner - Gestor de Eventos</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📅 Event Planner</h1>
+      <p class="subtitle">Aprende a usar librerías npm con Vite</p>
+    </header>
+
+    <main>
+      <section class="add-event">
+        <h2>Añadir Nuevo Evento</h2>
+        <form id="event-form">
+          <div class="form-group">
+            <label for="event-name">Nombre del evento:</label>
+            <input type="text" id="event-name" placeholder="Ej: Reunión con equipo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="event-date">Fecha:</label>
+            <input type="date" id="event-date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="event-time">Hora:</label>
+            <input type="time" id="event-time" required>
+          </div>
+
+          <button type="submit" class="btn-add">Añadir Evento</button>
+        </form>
+      </section>
+
+      <section class="current-info">
+        <h2>Información Actual</h2>
+        <div class="info-cards">
+          <div class="card">
+            <h3>Fecha y hora actual</h3>
+            <p id="current-datetime" class="highlight"></p>
+          </div>
+          <div class="card">
+            <h3>Día de la semana</h3>
+            <p id="current-day" class="highlight"></p>
+          </div>
+          <div class="card">
+            <h3>Semana del año</h3>
+            <p id="current-week" class="highlight"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="events-list">
+        <h2>Próximos Eventos</h2>
+        <div id="events-container" class="events-grid">
+          <!-- Los eventos se añadirán aquí dinámicamente -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Ejemplo educativo usando <strong>Vite</strong> + <strong>Day.js</strong></p>
+      <p class="concepts">Conceptos: npm packages, ES modules, manipulación de fechas, LocalStorage</p>
+    </footer>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

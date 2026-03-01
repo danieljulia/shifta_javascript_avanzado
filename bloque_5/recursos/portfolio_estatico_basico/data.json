@@ -1,0 +1,19 @@
+{
+    "name":"El nombre del artista!!!",
+    "descripcion":"Una descripción del artista!!!",
+    "proyectos":[
+        {
+            "nombre":"Nombre del proyecto 1",
+            "imagen":"imagenes/imagen_1.jpg"
+        },
+        {
+            "nombre":"Nombre del proyecto 2",
+             "imagen":"imagenes/imagen_2.jpg"
+        },
+        {
+            "nombre":"Nombre del proyecto 3",
+            "imagen":"imagenes/imagen_2.jpg"
+        }
+    ]
+
+}

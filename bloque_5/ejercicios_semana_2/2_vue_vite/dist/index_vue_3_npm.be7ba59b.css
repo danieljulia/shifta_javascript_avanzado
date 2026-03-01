@@ -1,0 +1,24 @@
+h1 {
+  color: gray;
+  text-align: center;
+  font-size: 50px;
+}
+
+button {
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 12px;
+  margin: 4px 2px;
+  padding: 15px 32px;
+  font-size: 16px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+/*# sourceMappingURL=index_vue_3_npm.be7ba59b.css.map */

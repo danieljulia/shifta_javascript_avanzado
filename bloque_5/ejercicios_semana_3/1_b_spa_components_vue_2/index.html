@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue SPA Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div class="nav">
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
+      <router-link to="/contact">Contact</router-link>
+    </div>
+    
+    <!-- transicion -->
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
+
+  <!-- Vue and Vue Router via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.5.3/vue-router.min.js"></script>
+  
+  <!-- Import component templates -->
+  <script src="templates/home.js"></script>
+  <script src="templates/about.js"></script>
+  <script src="templates/contact.js"></script>
+  <script src="templates/not-found.js"></script>
+  
+  <!-- Main application script -->
+  <script src="app.js"></script>
+</body>
+</html>

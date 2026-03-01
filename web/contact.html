@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Ejemplo: https://designmuseum.dk/dagtilbud-2/ -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Contact - My Portfolio</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<script type="text/javascript" src="js/scripts.js"></script>
+</head>
+<body class="contact">
+	<header class="main-header">
+		<div class="logo"><a href="index.html">This is<br>my portfolio</a></div>
+		<nav class="navigation main-nav">
+			<ul>
+				<li><a href="index.html" title="Home">Home</a></li>
+				<li><a href="#"  title="Projects">Projects</a></li>
+				<li><a href="#" title="About">About</a></li>
+				<li><a href="contact.html" class="selected" title="Contact">Contact</a></li>
+			</ul>
+		</nav>	
+	</header>
+	
+	<div class="wrapper">
+        <section class="display-columns columns-align-center">
+            <div class="col-40">
+                <p class="label">Address</p>
+                <p>1234 Main Street<br>City, State 12345<br>Country</p>
+                <p class="label">Contact</p>
+                <p>+34 123 456 789
+                <br><a href="mailto:info@my-portfolio.com">info@my-portfolio.com</a></p>
+                <p class="label">Opening hours</p>
+                <p>Monday to Friday: 9am - 6pm</p>
+                <p class="label">Follow me</p>
+                <div class="social">
+                    <a href="#" title="Facebook"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" title="Twitter"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="#" title="Instagram"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" title="LinkedIn"><ion-icon name="logo-linkedin"></ion-icon></a>
+                </div>
+            </div>
+            <div class="col-60">
+                <img src="images/411-1600x700.jpg" alt="Contact">
+            </div>
+        </section>
+
+		<section class="display-columns columns-align-center">
+            <div class="col-50">
+                <h1>Contact</h1>
+                <p>Feel free to contact me for any inquiries or collaborations. I will get back to you as soon as possible.</p>
+                <p>For business inquiries, please contact me at <a href="mailto:info@my-portfolio.com">info@my-portfolio.com</a></p>   
+            </div>
+			<div class="col-50 contact-form">
+                <form action="contact.php" method="post">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                    <input type="submit" value="send &#x2192;" class="button">
+                    <!-- hidden email to send the form -->
+                    <input type="hidden" name="email_to" value="jordi@zoom3.net">
+                </form>
+            </div>
+        </section>
+	</div>
+
+	<footer class="main-footer light-color">
+		<div class="logo">
+			<a href="index.html">This is<br>my portfolio</a>
+			<br>&copy; 2024
+		</div>
+		<nav class="navigation footer-nav">
+			<ul>
+				<li><a href="#">Privacy Policy</a></li>
+				<li><a href="#">Terms of Use</a></li>
+			</ul>
+		</nav>
+	</footer>
+    <!-- https://ionic.io/ionicons/usage -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

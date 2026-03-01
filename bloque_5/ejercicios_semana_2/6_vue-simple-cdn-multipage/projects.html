@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projects - My Portfolio</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="js/app.js"></script> <!-- Load shared components -->
+</head>
+<body>
+  <div id="app">
+    <site-header></site-header>
+
+    <main>
+      <h1>Projects</h1>
+      <project-list></project-list>
+    </main>
+
+    <site-footer></site-footer>
+  </div>
+
+  <!-- Inline template -->
+  <template id="projects-template">
+    <section>
+      <ul>
+      
+        
+        <li v-for="p in projects" :key="p.name">
+          <strong>{{ p.name }}</strong> — {{ p.tech }}
+        </li>
+      </ul>
+    </section>
+  </template>
+
+  <script>
+    const { createApp } = Vue;
+
+  
+    const ProjectList = {
+      template: '#projects-template',
+      data() {
+        return {
+          projects: []
+        };
+      },
+      async mounted() {
+        this.projects = await projects; // Await the promise
+      }
+    };
+
+  
+    createApp({
+      components: { ProjectList, SiteHeader, SiteFooter }
+    }).mount('#app');
+  </script>
+</body>
+</html>

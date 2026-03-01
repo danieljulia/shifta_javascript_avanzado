@@ -1,0 +1,44 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #333;
+  }
+  
+  .nav {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .nav a {
+    text-decoration: none;
+    color: #42b983;
+    font-weight: bold;
+    padding: 5px 0;
+  }
+  
+  .nav a.router-link-active {
+    color: #2c3e50;
+    border-bottom: 2px solid #42b983;
+  }
+  
+  .page {
+    padding: 20px;
+  }
+  
+  h1 {
+    color: #2c3e50;
+  }
+  
+  /* Transition animations */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s ease;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }

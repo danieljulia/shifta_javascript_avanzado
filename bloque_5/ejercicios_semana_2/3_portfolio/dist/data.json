@@ -1,0 +1,45 @@
+{
+  "name": "Jane Smith",
+  "title": "Visual Artist",
+  "bio": "Creative visual artist with a passion for painting, sculpture, and digital art. My work explores the intersection of nature and technology.",
+  "projects": [
+    {
+      "name": "Nature's Embrace",
+      "description": "A series of paintings that capture the beauty and complexity of natural landscapes.",
+      "category": "Painting",
+      "image": "https://picsum.photos/600/300"
+    },
+    {
+      "name": "Nature's Embrace",
+      "description": "A series of paintings that capture the beauty and complexity of natural landscapes.",
+      "category": "Painting",
+      "image": "https://picsum.photos/600/300"
+    },
+    {
+      "name": "Digital Dreams",
+      "description": "A collection of digital artworks that explore futuristic themes and abstract concepts.",
+      "category": "Digital Art",
+      "image": "https://picsum.photos/600/302"
+    },
+    {
+      "name": "Urban Sculptures",
+      "description": "A series of sculptures inspired by urban environments and architectural forms.",
+      "category": "Sculpture",
+      "image": "https://picsum.photos/600/303"
+    },
+    {
+      "name": "Urban Sculptures",
+      "description": "A series of sculptures inspired by urban environments and architectural forms.",
+      "category": "Sculpture",
+      "image": "https://picsum.photos/600/303"
+    }
+   
+      
+  ],
+  "contact": {
+    "email": "jane.smith@example.com",
+    "phone": "+1234567890",
+    "instagram": "https://instagram.com/janesmith",
+    "website": "https://janesmithart.com"
+  }
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Vue.js Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+</head>
+<body>
+
+    <!--- 
+    ejecutar con parcel 
+    
+    parcel index.html 
+
+    -->
+    
+    <div id="app">
+        <h1>{{ title }}</h1>
+        
+        <div class="counter">
+            <p>Count: {{ count }}</p>
+            <button @click="increment">Increment</button>
+            <button @click="decrement">Decrement</button>
+        </div>
+
+        <div class="todo-list">
+            <h2>Todo List</h2>
+            <input 
+                v-model="newTodo" 
+                @keyup.enter="addTodo" 
+                placeholder="Add a new todo"
+            >
+            <ul>
+                <li v-for="(todo, index) in todos" :key="index">
+                    <input 
+                        type="checkbox" 
+                        v-model="todo.completed"
+                    >
+                    <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
+                        {{ todo.text }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    title: 'Vue.js Demo',
+                    count: 0,
+                    newTodo: '',
+                    todos: [
+                        { text: 'Learn Vue.js!', completed: true },
+                        { text: 'Build something cool', completed: false }
+                    ]
+                }
+            },
+            methods: {
+                increment() {
+                    this.count++
+                },
+                decrement() {
+                    this.count--
+                },
+                addTodo() {
+                    if (this.newTodo.trim()) {
+                        this.todos.push({
+                            text: this.newTodo,
+                            completed: false
+                        })
+                        this.newTodo = ''
+                    }
+                }
+            }
+        }).mount('#app')
+    </script>
+
+    <style>
+        #app {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .counter {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        button {
+            margin: 0 5px;
+            padding: 5px 10px;
+        }
+        .todo-list {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+    </style>
+</body>
+</html>

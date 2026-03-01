@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Ejemplo vue</h1>
+   
+    <div id="app">
+        <p>{{ counter }}</p>
+        <button @click="increment">Increment</button>
+        <button @click="decrement">Decrement</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+            createApp({
+            data() {
+                return {
+                counter: 0
+                };
+            },
+            methods: {
+                increment() {
+                this.counter++;
+                },
+                decrement() {
+                this.counter--;
+                }
+            }
+            }).mount('#app');
+    </script>
+</body>
+</html>

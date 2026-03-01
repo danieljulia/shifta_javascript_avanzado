@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imágenes Aleatorias - Vue 3</title>
+  <!-- CDN de Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    #app {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Estilo para el botón */
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      margin-bottom: 20px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Contenedor de la imagen */
+    .image-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Estilo para la imagen */
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Mensaje cuando no hay imagen */
+    .no-image {
+      color: #666;
+      font-style: italic;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h1>Generador de Imágenes Aleatorias</h1>
+    
+    <!-- Botón para obtener una nueva imagen aleatoria -->
+    <button @click="fetchRandomImage">Obtener Imagen Aleatoria</button>
+
+    <!-- Contenedor de la imagen -->
+    <div class="image-container">
+      <!-- Muestra la imagen si imageUrl tiene un valor -->
+
+
+      <img v-if="imageUrl" :src="imageUrl" :alt="imageAlt" />
+      <!-- Muestra un mensaje si no hay imagen -->
+      <p v-else class="no-image">Haz clic en el botón para cargar una imagen aleatoria</p>
+    </div>
+  </div>
+
+  <script>
+    // Desestructuramos createApp de Vue 3
+    const { createApp } = Vue;
+
+    // Creamos la aplicación Vue 3
+    createApp({
+      // Función data que devuelve el estado reactivo
+      data() {
+        return {
+          imageUrl: '',  // URL de la imagen aleatoria
+          imageAlt: 'Imagen aleatoria'  // Texto alternativo para la imagen
+        }
+      },
+      // Métodos de la aplicación
+      methods: {
+        // Obtiene una imagen aleatoria de la API de Unsplash
+        async fetchRandomImage() {
+          try {
+            // Usamos la API de Unsplash que proporciona imágenes aleatorias
+            // Los parámetros pueden personalizarse para obtener diferentes tipos de imágenes
+            const width = 800;
+            const height = 600;
+            
+            // Generamos un número aleatorio para forzar una imagen diferente cada vez
+            const random = Math.floor(Math.random() * 1000);
+            
+            // Construimos la URL de la imagen
+            this.imageUrl = `https://picsum.photos/${width}/${height}?random=${random}`;
+            
+            // Actualizamos el texto alternativo
+            this.imageAlt = `Imagen aleatoria ${random}`;
+          } catch (error) {
+            console.error('Error al cargar la imagen:', error);
+            alert('Hubo un error al cargar la imagen. Por favor, intenta de nuevo.');
+          }
+        }
+      },
+      // Hook del ciclo de vida created - cargamos una imagen al iniciar
+      created() {
+        this.fetchRandomImage();
+      }
+    }).mount('#app');  // Montamos la aplicación en el elemento con id="app"
+  </script>
+
+</body>
+</html>

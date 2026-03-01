@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Projects</title>
+</head>
+<body>
+    <h1>Projects</h1>
+    <div id="projects"></div>
+
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "xxxxxx", //introduce tu apiKey y resto de datos
+            authDomain: "un-proyecto-para-shifta.firebaseapp.com",
+            projectId: "un-proyecto-para-shifta",
+            storageBucket: "un-proyecto-para-shifta.firebasestorage.app",
+            messagingSenderId: "20906720108",
+            appId: "1:20906720108:web:78340fcc1c181c8bee1149"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Read data
+        db.collection("proyectos").get().then((querySnapshot) => {
+            const projectsDiv = document.getElementById('projects');
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                console.log(data)
+                projectsDiv.innerHTML += `
+                    <div style="margin-bottom: 20px;">
+                        <h2>${data.nombre || 'No name'}</h2>
+                        ${data.image ? `<img src="${data.image}" style="max-width: 200px;">` : ''}
+                        <p>Category: ${data.categoria || 'No category'}</p>
+                    </div>
+                `;
+            });
+        }).catch((error) => {
+            console.error("Error getting documents: ", error);
+            document.getElementById('projects').innerHTML = `Error: ${error.message}`;
+        });
+    </script>
+</body>
+</html>

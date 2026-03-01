@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue SPA Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+<link rel="stylesheet" href="styles.css">
+
+  
+</head>
+<body>
+  <div id="app">
+
+    
+    <div class="nav">
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
+      <router-link to="/contact">Contact</router-link>
+    </div>
+    
+    <!-- transicion -->
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
+
+  <!-- Vue and Vue Router via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.5.3/vue-router.min.js"></script>
+
+  <script>
+    // Define route components
+    const Home = {
+      template: `
+        <div class="page">
+          <h1>Home Page</h1>
+          <p>Welcome to our Vue SPA with PWA capabilities!</p>
+          <p>This is a simple example of a Single Page Application built with Vue.js and Vue Router.</p>
+          <p>You can add this to your home screen as a PWA!</p>
+        </div>
+      `
+    };
+
+    const About = {
+      template: `
+        <div class="page">
+          <h1>About Page</h1>
+          <p>This is a demonstration of:</p>
+          <ul>
+            <li>Vue.js for reactive UI</li>
+            <li>Vue Router for SPA navigation</li>
+            <li>PWA manifest for installability</li>
+            <li>All loaded via CDN (no npm)</li>
+          </ul>
+        </div>
+      `
+    };
+
+    const Contact = {
+      template: `
+        <div class="page">
+          <h1>Contact Page</h1>
+          <p>You can reach us at:</p>
+          <p><strong>Email:</strong> example@vue-pwa.com</p>
+          <p><strong>Phone:</strong> (555) 123-4567</p>
+        </div>
+      `
+    };
+
+    const NotFound = {
+      template: `
+        <div class="page">
+          <h1>404 - Page Not Found</h1>
+          <p>Sorry, the page you're looking for doesn't exist.</p>
+          <router-link to="/">Go back to home</router-link>
+        </div>
+      `
+    };
+
+    // Define routes
+    const routes = [
+      { path: '/', component: Home },
+      { path: '/about', component: About },
+      { path: '/contact', component: Contact },
+      { path: '*', component: NotFound }
+    ];
+
+    // Create router instance
+    const router = new VueRouter({
+      routes,
+      //mode: 'history'
+    });
+
+
+
+    // Create Vue instance
+    const app = new Vue({
+      router
+    }).$mount('#app');
+
+
+  </script>
+</body>
+</html>

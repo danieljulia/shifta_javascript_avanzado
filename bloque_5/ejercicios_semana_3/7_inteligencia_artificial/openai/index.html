@@ -1,0 +1,205 @@
+<!--
+Vue 3 (CDN) + OpenAI Chat Completions API sample
+Language: Español
+IMPORTANTE: No pongas tu clave de API en el código del cliente en producción — expondrá la clave. Usa el servidor proxy indicado más abajo.
+
+Contenido:
+ - UI mínima con Vue 3 (CDN)
+ - Enviar mensajes al servidor proxy (/api/chat) (recomendado)
+ - Opcional: enviar directamente a OpenAI (solo para pruebas locales)
+
+Servidor proxy recomendado (ver comentarios abajo para Node/Express)
+-->
+
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vue CDN + ChatGPT API sample</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:900px;margin:24px auto;padding:0 16px;color:#111}
+    textarea{width:100%;min-height:90px;padding:8px;font-size:14px}
+    .controls{display:flex;gap:8px;align-items:center;margin:8px 0}
+    .messages{border:1px solid #ddd;padding:12px;border-radius:8px;margin-top:12px;background:#fafafa}
+    .msg{margin-bottom:10px}
+    .user{font-weight:600}
+    .assistant{color:#0a58ca}
+    button{padding:8px 12px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+    small.note{color:#666}
+  </style>
+</head>
+<body>
+  <h1>Vue CDN + ChatGPT API — mostra</h1>
+  <div id="app">
+    <label>Prompt</label>
+    <textarea v-model="prompt" placeholder="Escriu la teva pregunta aquí..."></textarea>
+
+    <div class="controls">
+      <label>
+        Model:
+        <select v-model="model">
+          <option>gpt-4o-mini</option>
+          <option>gpt-4o</option>
+          <option>gpt-3.5-turbo</option>
+        </select>
+      </label>
+
+      <label>
+        Temperatura:
+        <input type="range" min="0" max="1" step="0.1" v-model.number="temperature" />
+        <span>{{ temperature }}</span>
+      </label>
+
+      <button @click="send" :disabled="loading">Enviar</button>
+
+      <div style="margin-left:auto;text-align:right">
+        <small class="note">Recomanat: utilitza un <strong>proxy servidor</strong> per amagar la clau.</small>
+      </div>
+    </div>
+
+    <div class="messages">
+      <div v-for="(m,i) in messages" :key="i" class="msg">
+        <div :class="m.role==='user'? 'user':'assistant'">{{ m.role }}:</div>
+        <div>{{ m.content }}</div>
+      </div>
+      <div v-if="loading">Responent...</div>
+    </div>
+
+    <h3>Notes</h3>
+    <ul>
+      <li>Per a producció: crea un endpoint al teu servidor que afegeixi l'encapçalament <code>Authorization: Bearer &lt;API_KEY&gt;</code> i reenvii la crida a OpenAI.</li>
+      <li>Si vols provar ràpidament sense servidor, defineix <code>window.UNSAFE_OPENAI_API_KEY</code> al navegador (no segur).</li>
+    </ul>
+  </div>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup(){
+        const prompt = ref('Digues "Hola" i explica\'t en dues frases.');
+        const model = ref('gpt-3.5-turbo');
+        const temperature = ref(0.7);
+        const messages = ref([]);
+        const loading = ref(false);
+
+        // Aquesta funció crida el teu endpoint proxy /api/chat per tal d'amagar la clau
+        async function callProxy(payload){
+          // Exemple: el teu servidor ha d'implementar POST /api/chat que rebi {model,messages,temperature}
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if(!res.ok) throw new Error('Proxy error: ' + res.status);
+          return res.json();
+        }
+
+        // Per a proves locals només: crida directa a OpenAI (INSECUR)
+        async function callOpenAIInsecure(payload){
+          const apiKey = window.UNSAFE_OPENAI_API_KEY;
+          
+          if(!apiKey) throw new Error('Falta window.UNSAFE_OPENAI_API_KEY');
+
+          const res = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + apiKey
+            },
+            body: JSON.stringify(payload)
+          });
+          if(!res.ok){
+            const txt = await res.text();
+            throw new Error('OpenAI error: ' + res.status + ' ' + txt);
+          }
+          return res.json();
+        }
+
+        async function send(){
+          loading.value = true;
+          const userMsg = { role: 'user', content: prompt.value };
+          messages.value.push(userMsg);
+
+          const payload = {
+            model: model.value,
+            messages: [...messages.value],
+            temperature: temperature.value,
+            max_tokens: 800
+          };
+
+          try{
+            // Intentem usar el proxy primer
+            let data;
+            try{
+              data = await callProxy(payload);
+            }catch(proxyErr){
+              // Si el proxy no existeix, intentem la crida insegura (només per a desenvolupament)
+              console.warn('Proxy failed, falling back to insecure direct call:', proxyErr);
+              data = await callOpenAIInsecure(payload);
+            }
+
+            // Interpretem la resposta segons l'API Chat Completions (v1)
+            const assistantContent = data.choices && data.choices[0] && data.choices[0].message
+              ? data.choices[0].message.content
+              : (data.error && data.error.message) || JSON.stringify(data);
+
+            messages.value.push({ role: 'assistant', content: assistantContent });
+
+          }catch(err){
+            messages.value.push({ role: 'assistant', content: 'Error: ' + err.message });
+          }finally{
+            loading.value = false;
+          }
+        }
+
+        return { prompt, model, temperature, messages, send, loading };
+      }
+    }).mount('#app');
+  </script>
+
+  <!--
+  ------------------
+  Exemple de servidor proxy (Node.js + Express)
+  Fitxer: server.js
+
+  // Instal·la: npm i express node-fetch
+  const express = require('express');
+  const fetch = require('node-fetch');
+  const app = express();
+  app.use(express.json());
+
+  // Llegeix la clau des d'una variable d'entorn
+  const OPENAI_KEY = process.env.OPENAI_API_KEY;
+  if(!OPENAI_KEY){
+    console.error('Define OPENAI_API_KEY a les variables d\'entorn');
+    process.exit(1);
+  }
+
+  app.post('/api/chat', async (req, res) => {
+    try{
+      const body = req.body;
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_KEY}`
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await r.text();
+      res.status(r.status).send(data);
+    }catch(e){
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.listen(3000, ()=> console.log('Proxy server running on http://localhost:3000'));
+  ------------------
+  -->
+
+</body>
+</html>

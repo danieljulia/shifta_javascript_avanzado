@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replicate API Image</title>
+</head>
+<body>
+    <button onclick="fetchImage()">Generate Image</button>
+    <img id="generatedImage" src="" alt="Generated Image" style="display:none; max-width:100%;">
+    
+    <script>
+        /**
+         * no funciona por un problema de CORS 
+         * Cross-Origin Resource Sharing (CORS) es un mecanismo que utiliza cabeceras HTTP adicionales para permitir que un user agent obtenga permiso para acceder a recursos seleccionados desde un servidor, en un origen distinto (dominio) al que pertenece.
+         * pero se puede ejecutar el script con node
+         * node script.js
+         * */
+
+
+        async function fetchImage() {
+            const apiKey = ''; // Substitueix amb la teva clau d'API
+            const apiUrl = 'https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions';
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'wait'
+                },
+                body: JSON.stringify({
+                    input: {
+                        prompt: "black forest gateau cake spelling out the words 'SHIFTA', tasty, food photography, dynamic shot"
+                    }
+                })
+            });
+            
+            const data = await response.json();
+            if (data && data.output) {
+                const imageUrl = data.output;
+                const imgElement = document.getElementById('generatedImage');
+                imgElement.src = imageUrl;
+                imgElement.style.display = 'block';
+            } else {
+                alert('Error generating image.');
+            }
+        }
+    </script>
+</body>
+</html>

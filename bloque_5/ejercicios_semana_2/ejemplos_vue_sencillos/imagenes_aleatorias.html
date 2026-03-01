@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imágenes Aleatorias</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <h2>Imágenes Aleatorias</h2>
+    <button @click="getRandomImage">Mostrar Imagen Aleatoria</button>
+    <div v-if="imageUrl">
+      <img :src="imageUrl" alt="Imagen aleatoria" width="300">
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          imageUrl: ''
+        }
+      },
+      methods: {
+        getRandomImage() {
+          const images = [
+            'https://picsum.photos/300/200?random=1',
+            'https://picsum.photos/300/200?random=2',
+            'https://picsum.photos/300/200?random=3',
+            'https://picsum.photos/300/200?random=4',
+            'https://picsum.photos/300/200?random=5'
+          ];
+          this.imageUrl = images[Math.floor(Math.random() * images.length)];
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

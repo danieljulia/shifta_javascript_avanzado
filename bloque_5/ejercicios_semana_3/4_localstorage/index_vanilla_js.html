@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación Backend</title>
+</head>
+<body>
+  <h2>Usuarios</h2>
+  <ul id="listaUsuarios"></ul>
+
+  <input id="nombre" placeholder="Nombre">
+  <input id="email" placeholder="Email">
+  <button id="agregar">Agregar usuario</button>
+
+  <script>
+    // Inicializamos "base de datos" en localStorage si no existe
+    if (!localStorage.getItem("usuarios")) {
+      const usuariosIniciales = [
+        { id: 1, nombre: "Ana", email: "ana@example.com" },
+        { id: 2, nombre: "Luis", email: "luis@example.com" }
+      ];
+      localStorage.setItem("usuarios", JSON.stringify(usuariosIniciales));
+    }
+
+    function obtenerUsuarios() {
+      return JSON.parse(localStorage.getItem("usuarios")) || [];
+    }
+
+    function guardarUsuarios(usuarios) {
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    }
+
+    function mostrarUsuarios() {
+      const lista = document.getElementById("listaUsuarios");
+      lista.innerHTML = "";
+      obtenerUsuarios().forEach(u => {
+        const li = document.createElement("li");
+        li.textContent = `${u.nombre} (${u.email})`;
+        lista.appendChild(li);
+      });
+    }
+
+    document.getElementById("agregar").addEventListener("click", () => {
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+
+      const usuarios = obtenerUsuarios();
+      const nuevoUsuario = {
+        id: Date.now(), // simulamos un ID único
+        nombre,
+        email
+      };
+
+      usuarios.push(nuevoUsuario);
+      guardarUsuarios(usuarios);
+      mostrarUsuarios();
+    });
+
+    // Al cargar la página
+    mostrarUsuarios();
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reloj Digital - Vue 3</title>
+  <!-- CDN de Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    /* Estilos para el reloj digital */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-family: 'Courier New', monospace;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin: 0;
+      padding: 20px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h1>{{ time }}</h1>
+  </div>
+
+  <script>
+    // Desestructuramos createApp de Vue 3
+    const { createApp } = Vue;
+
+    // Creamos la aplicación Vue 3
+    createApp({
+      // Función data que devuelve el estado reactivo
+      data() {
+        return {
+          time: '',  // Variable que almacenará la hora actual
+          intervalId: null  // ID del intervalo para poder limpiarlo después
+        }
+      },
+      // Hook del ciclo de vida created se ejecuta cuando la instancia es creada
+      created() {
+        // Actualizamos la hora inmediatamente
+        this.updateTime();
+        // Configuramos un intervalo que actualiza la hora cada segundo (1000ms)
+        this.intervalId = setInterval(this.updateTime, 1000);
+      },
+      // Hook del ciclo de vida beforeUnmount se ejecuta antes de que el componente se desmonte
+     
+      // Métodos de la aplicación
+      methods: {
+        // Actualiza la hora actual
+        updateTime() {
+          const now = new Date();
+          // toLocaleTimeString formatea la hora según la configuración regional del navegador
+          this.time = now.toLocaleTimeString('es-ES');
+        }
+      }
+    }).mount('#app');  // Montamos la aplicación en el elemento con id="app"
+  </script>
+
+</body>
+</html>
