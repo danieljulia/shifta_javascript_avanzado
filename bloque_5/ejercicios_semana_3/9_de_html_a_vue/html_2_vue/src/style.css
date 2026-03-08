@@ -1,0 +1,37 @@
+body{
+  font-family: sans-serif;
+  margin:0;
+}
+
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+.project-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.project-card{
+  border:1px solid #ddd;
+  padding:20px;
+  text-decoration:none;
+  color:black;
+}
+
+.project-card:hover{
+  background:#f5f5f5;
+}
+
+header a{
+    color:white;
+}
