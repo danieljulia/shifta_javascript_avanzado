@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explicación de los ejemplos – Semana 1</title>
+<style>
+  :root { --bg:#f7f8fa; --fg:#1f2430; --muted:#5b6475; --card:#fff; --accent:#3b6cf6; --code:#0f172a; --border:#e3e6ec; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--fg); line-height:1.6; }
+  header { background:var(--code); color:#fff; padding:2.5rem 1.5rem; }
+  header h1 { margin:0 0 .3rem; font-size:1.9rem; }
+  header p { margin:0; color:#b6c0d4; }
+  .layout { display:flex; max-width:1100px; margin:0 auto; gap:2rem; padding:1.5rem; }
+  nav { flex:0 0 220px; position:sticky; top:1rem; align-self:flex-start; font-size:.92rem; }
+  nav a { display:block; color:var(--muted); text-decoration:none; padding:.2rem 0; }
+  nav a:hover { color:var(--accent); }
+  nav .grp { font-weight:700; color:var(--fg); margin-top:.9rem; }
+  main { flex:1; min-width:0; }
+  section { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.4rem 1.6rem; margin-bottom:1.4rem; }
+  h2 { margin-top:0; font-size:1.4rem; border-bottom:2px solid var(--accent); padding-bottom:.3rem; }
+  h3 { margin-bottom:.3rem; }
+  code { background:#eef1f7; padding:.1em .35em; border-radius:4px; font-size:.9em; }
+  pre { background:var(--code); color:#e6edf7; padding:1rem; border-radius:8px; overflow-x:auto; font-size:.86rem; line-height:1.5; }
+  pre code { background:none; padding:0; color:inherit; }
+  .run { border-left:4px solid var(--accent); background:#eef3ff; padding:.6rem 1rem; border-radius:0 6px 6px 0; margin:.8rem 0; }
+  .run pre { margin:.4rem 0 0; }
+  .tag { display:inline-block; font-size:.75rem; background:var(--accent); color:#fff; padding:.1rem .5rem; border-radius:999px; margin-right:.3rem; vertical-align:middle; }
+  .warn { border-left:4px solid #e08a00; background:#fff6e6; padding:.6rem 1rem; border-radius:0 6px 6px 0; margin:.8rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:.92rem; }
+  th, td { border:1px solid var(--border); padding:.45rem .6rem; text-align:left; vertical-align:top; }
+  th { background:#eef1f7; }
+  @media (max-width:800px){ .layout{flex-direction:column} nav{position:static} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ejemplos de la Semana 1</h1>
+  <p>Node.js, packages de npm, servidor con Express y proyectos con Vite · carpeta <code>bloque_5/ejercicios_semana_1</code></p>
+</header>
+
+<div class="layout">
+<nav>
+  <a href="#resumen">Resumen</a>
+  <div class="grp">ejercicios_simples_node</div>
+  <a href="#simples">Node básico</a>
+  <div class="grp">ejemplos_packages</div>
+  <a href="#cjs-esm">CommonJS vs ES Modules</a>
+  <a href="#cowsay">common_js (cowsay)</a>
+  <a href="#ascii">ascii_art (figlet)</a>
+  <a href="#chalk">chalk</a>
+  <a href="#axios">axios</a>
+  <a href="#pdf">pdf (pdf-lib)</a>
+  <div class="grp">node-server</div>
+  <a href="#server">Servidor Express</a>
+  <div class="grp">ejemplos_vite</div>
+  <a href="#vite">¿Qué es Vite?</a>
+  <a href="#simple">simple</a>
+  <a href="#cat">thecatapi</a>
+  <a href="#wiki">wikipedia</a>
+  <a href="#planner">event-planner</a>
+  <div class="grp">Extra</div>
+  <a href="#notas">Notas y mejoras</a>
+</nav>
+
+<main>
+
+<section id="resumen">
+  <h2>Resumen</h2>
+  <p>La carpeta va de menos a más: primero se ejecuta JavaScript fuera del navegador con <strong>Node.js</strong>, después se usan librerías de terceros con <strong>npm</strong>, luego se crea un <strong>servidor</strong> y por último se llevan las librerías al navegador con <strong>Vite</strong>.</p>
+  <table>
+    <tr><th>Carpeta</th><th>Qué enseña</th></tr>
+    <tr><td><code>ejercicios_simples_node</code></td><td>Ejecutar scripts, leer archivos, asincronía, <code>npm start</code></td></tr>
+    <tr><td><code>ejemplos_packages</code></td><td>Instalar y usar packages (cowsay, figlet, chalk, axios, pdf-lib), CommonJS vs ESM</td></tr>
+    <tr><td><code>node-server</code></td><td>API REST con Express, middleware, variables de entorno, autenticación por API key</td></tr>
+    <tr><td><code>ejemplos_vite</code></td><td>Proyectos frontend con bundler: consumir APIs con axios, DOM, Day.js, LocalStorage</td></tr>
+  </table>
+</section>
+
+<!-- ============ NODE SIMPLE ============ -->
+<section id="simples">
+  <h2>ejercicios_simples_node</h2>
+  <p>Primer contacto con Node. Los scripts se ejecutan en la terminal, no en el navegador (por eso no existe <code>alert</code>, pero sí <code>console.log</code>).</p>
+
+  <h3>ejemplo.js</h3>
+  <pre><code>console.log("hola mundo");</code></pre>
+  <div class="run">Ejecutar: <pre><code>node ejemplo.js</code></pre></div>
+
+  <h3>package.json y <code>npm start</code></h3>
+  <p>El <code>package.json</code> define un script <code>"start": "node ejemplo.js"</code>. Así se puede lanzar con <code>npm start</code> sin recordar el nombre del archivo.</p>
+
+  <h3>leer.js — CommonJS con callback</h3>
+  <pre><code>const fs = require('fs');
+
+fs.readFile('ejemplo.txt', 'utf8', (err, data) =&gt; {
+    if (err) throw err;
+    console.log(data);
+});
+console.log('Este mensaje se imprimirá antes...');</code></pre>
+  <p>Idea clave: <strong>la lectura es asíncrona</strong>. Node lanza <code>readFile</code>, sigue con la siguiente línea, y cuando el archivo está leído ejecuta el callback. Por eso el segundo <code>console.log</code> sale <em>antes</em> que el contenido del archivo.</p>
+
+  <h3>leer_2.mjs — ES Modules con async/await</h3>
+  <pre><code>import { readFile } from 'fs/promises';
+
+async function leer_archivo() {
+    try {
+        const data = await readFile('ejemplo.txt', 'utf8');
+        console.log(data);
+    } catch (err) {
+        console.error('Error leyendo el archivo:', err);
+    }
+}
+leer_archivo();</code></pre>
+  <p>Hace lo mismo que el anterior, pero con la versión de <code>fs</code> basada en <strong>promesas</strong>. <code>await</code> pausa la función hasta tener el resultado y <code>try/catch</code> gestiona los errores. La extensión <code>.mjs</code> le dice a Node que use <code>import</code>.</p>
+</section>
+
+<!-- ============ PACKAGES ============ -->
+<section id="cjs-esm">
+  <h2>ejemplos_packages</h2>
+  <h3>CommonJS vs ES Modules</h3>
+  <p>Node admite dos sistemas de módulos, y los ejemplos usan ambos:</p>
+  <table>
+    <tr><th></th><th>CommonJS</th><th>ES Modules</th></tr>
+    <tr><td>Sintaxis</td><td><code>const x = require('x')</code></td><td><code>import x from 'x'</code></td></tr>
+    <tr><td>Se activa con</td><td>extensión <code>.cjs</code> (o <code>.js</code> por defecto)</td><td>extensión <code>.mjs</code> o <code>"type": "module"</code> en <code>package.json</code></td></tr>
+    <tr><td>Top-level <code>await</code></td><td>No</td><td>Sí</td></tr>
+    <tr><td>Ejemplos</td><td>cowsay, figlet, node-server</td><td>chalk, axios, pdf-lib, Vite</td></tr>
+  </table>
+  <p>Flujo general con cualquier package: <code>npm init</code> → <code>npm install nombre</code> → importarlo → ejecutar con <code>node</code>. Los packages se guardan en <code>node_modules/</code> y quedan anotados en <code>dependencies</code>.</p>
+</section>
+
+<section id="cowsay">
+  <h2><span class="tag">CJS</span>common_js / cowsay.cjs</h2>
+  <pre><code>const cowsay = require('cowsay');
+console.log(cowsay.say({ text: "Hola shifta!" }));</code></pre>
+  <p>Dibuja en la terminal una vaca en ASCII con el texto dentro de un bocadillo. Es el ejemplo más sencillo de <code>require</code> de un package externo.</p>
+  <div class="run">Ejecutar: <pre><code>npm install cowsay
+node cowsay.cjs</code></pre></div>
+</section>
+
+<section id="ascii">
+  <h2><span class="tag">CJS</span>ascii_art / ascii.cjs</h2>
+  <pre><code>var figlet = require("figlet");
+
+figlet("Hello Shifta!!", function (err, data) {
+  if (err) { console.log("Something went wrong..."); console.dir(err); return; }
+  console.log(data);
+});</code></pre>
+  <p>El package <strong>figlet</strong> convierte texto en letras grandes de ASCII art. Usa el patrón clásico de callback de Node: <code>(err, data)</code>, se comprueba primero el error y luego se usa el resultado.</p>
+  <div class="run">Ejecutar: <pre><code>npm install figlet
+node ascii.cjs</code></pre></div>
+</section>
+
+<section id="chalk">
+  <h2><span class="tag">ESM</span>chalk / chalk.js</h2>
+  <pre><code>import tiza from 'chalk';
+
+console.log(tiza.blue('Hello world!'));
+console.log(tiza.red('This is an error message.'));
+console.log(tiza.green('Success!'));
+console.log(tiza.yellow('Warning!'));</code></pre>
+  <p><strong>chalk</strong> pinta el texto de la consola con colores. Desde su versión 5 es solo ESM, por eso el <code>package.json</code> lleva <code>"type": "module"</code>. Fíjate en que el nombre de la importación por defecto es libre (<code>tiza</code> en lugar de <code>chalk</code>). El script <code>dev</code> permite ejecutarlo con <code>npm run dev</code>.</p>
+  <div class="run">Ejecutar: <pre><code>npm install
+npm run dev</code></pre></div>
+</section>
+
+<section id="axios">
+  <h2><span class="tag">ESM</span>axios / axios.mjs</h2>
+  <p>Consulta la <strong>API de búsqueda de Wikipedia</strong> con <code>axios</code> (cliente HTTP) e imprime los resultados en la consola.</p>
+  <pre><code>const response = await axios.get(url, {
+  params,   // action, format, list:'search', srsearch: query...
+  headers: { 'User-Agent': 'shifta2024-axios-example/1.0 (...)' }
+});
+const searchResults = response.data.query.search;
+
+searchResults.forEach((result, index) =&gt; {
+  console.log(`${index + 1}. ${result.title}`);
+  console.log(result.snippet.replace(/&lt;[^&gt;]+&gt;/g, '') + '...');
+  console.log(`https://en.wikipedia.org/wiki/${encodeURIComponent(result.title)}`);
+});</code></pre>
+  <ul>
+    <li><code>params</code> se convierte automáticamente en la query string de la URL.</li>
+    <li>Wikipedia devuelve el <em>snippet</em> con etiquetas HTML; la expresión regular <code>/&lt;[^&gt;]+&gt;/g</code> las elimina.</li>
+    <li><code>encodeURIComponent</code> escapa espacios y caracteres especiales en la URL.</li>
+    <li>El error se lee con <code>error.response?.status</code> (optional chaining) porque si no hubo respuesta, <code>response</code> no existe.</li>
+  </ul>
+  <p>El propio código deja un ejercicio: <em>mostrar los resultados en un HTML en lugar de la consola</em>. Es justo lo que hace el ejemplo <a href="#wiki">ejemplos_vite/wikipedia</a>.</p>
+  <div class="run">Ejecutar: <pre><code>npm install
+node axios.mjs</code></pre></div>
+</section>
+
+<section id="pdf">
+  <h2><span class="tag">ESM</span>pdf / pdf-lib</h2>
+  <p>Crea un PDF desde JavaScript con <strong>pdf-lib</strong>. Hay dos versiones del mismo código:</p>
+  <table>
+    <tr><th>Archivo</th><th>Entorno</th><th>Cómo entrega el PDF</th></tr>
+    <tr><td><code>pdf.js</code></td><td>Node</td><td><code>writeFileSync('output.pdf', pdfBytes)</code> — guarda un archivo</td></tr>
+    <tr><td><code>pdf_2.js</code> + <code>index.html</code></td><td>Navegador</td><td>Crea un <code>Blob</code>, una URL con <code>URL.createObjectURL</code> y lo muestra en un <code>&lt;iframe&gt;</code></td></tr>
+  </table>
+  <p>Pasos comunes: <code>PDFDocument.create()</code> → <code>embedFont(...)</code> → <code>addPage()</code> → <code>drawText(...)</code> → <code>save()</code>, que devuelve un <code>Uint8Array</code> con los bytes del PDF.</p>
+  <pre><code>const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+const url  = URL.createObjectURL(blob);
+const iframe = document.createElement('iframe');
+iframe.src = url;
+document.body.appendChild(iframe);</code></pre>
+  <div class="run">Node: <pre><code>npm init
+npm i pdf-lib      # y añadir "type": "module" al package.json
+node pdf.js        # genera output.pdf</code></pre>
+  Navegador: <code>pdf_2.js</code> usa <code>import</code> de un package, así que necesita un bundler (por ejemplo Vite): <code>npx vite</code>.</div>
+</section>
+
+<!-- ============ SERVER ============ -->
+<section id="server">
+  <h2><span class="tag">CJS</span>node-server / server.js</h2>
+  <p>Una pequeña <strong>API REST</strong> con Express. Es el ejemplo más completo de Node de la carpeta.</p>
+
+  <h3>Packages</h3>
+  <table>
+    <tr><th>Package</th><th>Para qué sirve</th></tr>
+    <tr><td><code>express</code></td><td>Framework para definir rutas y middleware</td></tr>
+    <tr><td><code>helmet</code></td><td>Añade cabeceras HTTP de seguridad</td></tr>
+    <tr><td><code>cors</code></td><td>Permite peticiones desde otros orígenes (dominios/puertos)</td></tr>
+    <tr><td><code>morgan</code></td><td>Log de cada petición en la consola</td></tr>
+    <tr><td><code>dotenv</code></td><td>Carga <code>.env</code> en <code>process.env</code></td></tr>
+  </table>
+
+  <h3>Middleware</h3>
+  <p>Cada petición atraviesa en orden una cadena de funciones <code>(req, res, next)</code>. Cada una puede modificar la petición, responder, o llamar a <code>next()</code> para pasar a la siguiente.</p>
+  <pre><code>app.use(helmet());
+app.use(cors());
+app.use(morgan('combined'));
+app.use(express.json());                          // lee body JSON
+app.use(express.urlencoded({ extended: true }));  // lee body de formularios
+app.use(requestLogger);                           // middleware propio</code></pre>
+
+  <h3>Autenticación con API key</h3>
+  <pre><code>const authenticateUser = (req, res, next) =&gt; {
+  const apiKey = req.get('X-API-Key');
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+};</code></pre>
+  <p>Se usa poniéndolo como segundo argumento de una ruta: <code>app.get('/users', authenticateUser, handler)</code>.</p>
+
+  <h3>Rutas</h3>
+  <table>
+    <tr><th>Método y ruta</th><th>Protegida</th><th>Respuesta</th></tr>
+    <tr><td><code>GET /</code></td><td>No</td><td>JSON de bienvenida con versión y fecha</td></tr>
+    <tr><td><code>GET /users</code></td><td>Sí</td><td>Lista fija de usuarios</td></tr>
+    <tr><td><code>POST /users</code></td><td>Sí</td><td><code>201</code> con el usuario creado; <code>400</code> si faltan <code>name</code> o <code>email</code></td></tr>
+    <tr><td>Cualquier otra</td><td>—</td><td><code>404</code> "Route not found"</td></tr>
+  </table>
+  <p>Al final hay un middleware de errores (4 parámetros: <code>err, req, res, next</code>) que devuelve un <code>500</code>, y un manejador de <code>SIGTERM</code> para el cierre ordenado.</p>
+
+  <div class="run">Configurar <code>.env</code> y ejecutar:
+<pre><code>API_KEY=272727
+PORT=27000
+
+npm install express helmet cors morgan dotenv
+node server.js
+
+# ruta pública
+curl localhost:27000/
+
+# ruta protegida
+curl -H "X-API-Key: 272727" localhost:27000/users
+
+# crear usuario
+curl -X POST -H "X-API-Key: 272727" -H "Content-Type: application/json" \
+     -d '{"name":"Carla","email":"c@x.com"}' localhost:27000/users</code></pre></div>
+</section>
+
+<!-- ============ VITE ============ -->
+<section id="vite">
+  <h2>ejemplos_vite</h2>
+  <h3>¿Qué es Vite y por qué se usa?</h3>
+  <p>En el navegador no se puede hacer <code>import axios from 'axios'</code> directamente, porque el navegador no sabe buscar en <code>node_modules</code>. <strong>Vite</strong> es una herramienta que:</p>
+  <ul>
+    <li>Sirve el proyecto en desarrollo con recarga instantánea (<code>npm run dev</code>).</li>
+    <li>Resuelve los <code>import</code> de packages de npm.</li>
+    <li>Genera una versión optimizada para producción en <code>dist/</code> (<code>npm run build</code>) y permite probarla con <code>npm run preview</code>.</li>
+  </ul>
+  <p>Los cuatro proyectos comparten los mismos scripts <code>dev</code>, <code>build</code> y <code>preview</code>, y el HTML carga el JS con <code>&lt;script type="module" src="..."&gt;</code>.</p>
+  <div class="run">En cualquiera de los proyectos: <pre><code>npm install
+npm run dev</code></pre></div>
+</section>
+
+<section id="simple">
+  <h2>ejemplos_vite / simple</h2>
+  <p>El proyecto mínimo: un <code>index.html</code> con títulos y un <code>index.js</code> con <code>console.log("hola mundo")</code>. Sirve para comprobar que Vite funciona: al abrirlo, el mensaje aparece en la consola del navegador (F12), no en la terminal.</p>
+</section>
+
+<section id="cat">
+  <h2>ejemplos_vite / thecatapi</h2>
+  <p>Muestra 10 fotos de gatos de <strong>TheCatAPI</strong>.</p>
+  <pre><code>const apiKey = import.meta.env.VITE_CAT_API_KEY;   // viene del archivo .env
+const url_api = "https://api.thecatapi.com/v1/images/search";
+
+axios.get(url_api, { params: { limit: 10, api_key: apiKey } })
+  .then(response =&gt; {
+    response.data.forEach(result =&gt; {
+      const img = document.createElement('img');
+      img.src = result.url;
+      img.alt = 'Cat Image';
+      document.getElementById("fotos").appendChild(img);
+    });
+  })
+  .catch(error =&gt; console.error('Error fetching data:', error));</code></pre>
+  <ul>
+    <li>La API key no está en el código: Vite expone las variables de <code>.env</code> que empiezan por <code>VITE_</code> en <code>import.meta.env</code>. Copia <code>.env.example</code> a <code>.env</code> y pon tu clave (el <code>.env</code> está en <code>.gitignore</code>). Aun así, en frontend la clave acaba siendo visible en el navegador.</li>
+    <li>Usa promesas con <code>.then/.catch</code> (frente a <code>async/await</code> de otros ejemplos; hacen lo mismo).</li>
+    <li>Por cada resultado crea un <code>&lt;img&gt;</code> con <code>createElement</code> y lo añade al <code>&lt;div id="fotos"&gt;</code>.</li>
+    <li>El CSS fija el ancho a 400px y usa <code>object-fit: cover</code> para que las imágenes no se deformen.</li>
+  </ul>
+</section>
+
+<section id="wiki">
+  <h2>ejemplos_vite / wikipedia</h2>
+  <p>Es la solución al ejercicio del ejemplo de axios en Node: un buscador de Wikipedia en la web.</p>
+  <h3>Flujo</h3>
+  <ol>
+    <li>El <code>&lt;form&gt;</code> no tiene JavaScript: al enviarlo, el navegador recarga la página con <code>?query=lo-que-escribas</code> en la URL.</li>
+    <li><code>getQueryParam('query')</code> lee ese parámetro con <code>URLSearchParams(window.location.search)</code>.</li>
+    <li>Si existe, se llama a <code>searchWikipedia(query)</code>, que hace la petición con axios.</li>
+    <li><code>muestraResultados(data)</code> vacía el contenedor y crea un <code>&lt;li&gt;</code> por resultado con enlace y snippet.</li>
+  </ol>
+  <pre><code>params: { action:'query', format:'json', list:'search',
+          srsearch: query, utf8: 1, origin: '*' }</code></pre>
+  <p>El parámetro <code>origin: '*'</code> es imprescindible en el navegador: activa CORS en la API de Wikipedia. En Node no hacía falta.</p>
+  <p>Diferencia con la versión de Node: aquí el snippet se inserta con <code>innerHTML</code> a propósito, porque Wikipedia devuelve <code>&lt;span class="searchmatch"&gt;</code> para resaltar las coincidencias.</p>
+</section>
+
+<section id="planner">
+  <h2>ejemplos_vite / event-planner</h2>
+  <p>La aplicación más completa: un gestor de eventos con <strong>Day.js</strong> (librería de fechas), <strong>LocalStorage</strong> y CSS moderno. Ya tiene su propio <code>README.md</code> detallado; aquí va el resumen de <code>main.js</code>.</p>
+
+  <h3>Configuración de Day.js</h3>
+  <pre><code>import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/es';
+
+dayjs.extend(weekOfYear);
+dayjs.extend(relativeTime);
+dayjs.locale('es');</code></pre>
+  <p>Day.js es pequeño porque las funciones extra son <strong>plugins</strong> que se activan con <code>extend</code>. <code>weekOfYear</code> añade <code>.week()</code> y <code>relativeTime</code> añade <code>.fromNow()</code> ("en 3 días").</p>
+
+  <h3>Estructura de la app</h3>
+  <table>
+    <tr><th>Función</th><th>Qué hace</th></tr>
+    <tr><td><code>init()</code></td><td>Carga los eventos, pinta la información actual y la lista; arranca un <code>setInterval</code> de 1 s para el reloj</td></tr>
+    <tr><td><code>updateCurrentInfo()</code></td><td>Muestra fecha/hora, día de la semana y semana del año con <code>format()</code></td></tr>
+    <tr><td>listener de <code>submit</code></td><td><code>preventDefault()</code>, crea el evento (<code>id: Date.now()</code>), guarda, repinta, resetea el formulario</td></tr>
+    <tr><td><code>renderEvents()</code></td><td>Filtra eventos futuros (<code>isAfter</code>), ordena, y genera el HTML con <code>map(...).join('')</code> y <em>template literals</em></td></tr>
+    <tr><td><code>deleteEvent(id)</code></td><td>Filtra el array para quitar el evento; se asigna a <code>window</code> para que el <code>onclick</code> inline del HTML lo encuentre</td></tr>
+    <tr><td><code>saveEventsToStorage()</code> / <code>loadEventsFromStorage()</code></td><td>Persisten en <code>localStorage</code> con <code>JSON.stringify/parse</code></td></tr>
+    <tr><td><code>showNotification()</code></td><td>Crea un aviso, le añade la clase <code>show</code> para animarlo con CSS y lo elimina a los 3 s</td></tr>
+  </table>
+
+  <h3>Detalles interesantes</h3>
+  <ul>
+    <li><strong>Al guardar no se guarda el objeto Day.js</strong>, solo <code>id, name, date, time</code>. Al cargar se reconstruye <code>datetime</code> con <code>dayjs(...)</code>. Los objetos con métodos no sobreviven a JSON.</li>
+    <li><strong>Urgencia visual:</strong> <code>diff(now, 'day')</code> decide la clase CSS: <code>urgent-today</code> (rojo), <code>urgent-soon</code> (naranja, ≤ 3 días) o ninguna (azul).</li>
+    <li><strong>Estado + render:</strong> el array <code>events</code> es la única fuente de verdad; cada cambio termina llamando a <code>renderEvents()</code> que redibuja todo.</li>
+    <li>Al final hay <code>console.log</code> con ejemplos de Day.js para explorar en la consola del navegador.</li>
+    <li><code>vite.config.js</code> fija el puerto 3000 y abre el navegador automáticamente.</li>
+  </ul>
+</section>
+
+<!-- ============ NOTAS ============ -->
+<section id="notas">
+  <h2>Notas: errores corregidos</h2>
+  <p>Al revisar los ejemplos se detectaron estos problemas, ya corregidos:</p>
+  <ul>
+    <li><strong>API key en el código</strong> (<code>thecatapi</code>): ahora se lee de <code>.env</code> con <code>import.meta.env.VITE_CAT_API_KEY</code>; se incluye <code>.env.example</code>. La clave antigua sigue en el historial de git, así que conviene regenerarla en TheCatAPI.</li>
+    <li><strong>Readme de axios</strong>: ahora indica <code>node axios.mjs</code>.</li>
+    <li><strong>Cierre ordenado en <code>server.js</code></strong>: se guarda el resultado de <code>app.listen()</code> en <code>server</code> y se llama a <code>server.close()</code>.</li>
+    <li><strong>Orden de middleware en <code>server.js</code></strong>: primero el 404 y el manejador de errores el último.</li>
+    <li><strong>.env en el repositorio</strong> (<code>node-server</code>): se añadió <code>.gitignore</code> y <code>.env.example</code>. Como el <code>.env</code> ya estaba versionado, hay que ejecutar <code>git rm --cached .env</code> para que git deje de seguirlo.</li>
+    <li><strong>HTML incompleto</strong>: <code>simple</code> y <code>wikipedia</code> ahora cierran <code>&lt;/body&gt;</code>.</li>
+    <li><strong>XSS en <code>event-planner</code></strong>: el nombre del evento se pasa por <code>escapeHtml()</code> antes de usar <code>innerHTML</code>.</li>
+  </ul>
+</section>
+
+</main>
+</div>
+</body>
+</html>

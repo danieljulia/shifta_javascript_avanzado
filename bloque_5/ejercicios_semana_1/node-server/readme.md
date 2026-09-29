@@ -37,3 +37,5 @@ Permite definir rutas, administra middleware , crear plantillas, etc
 - Cors. Permite Cross-Origin Resource Sharing (CORS), peticiones entre servidores diferentes
 - Morgan. Crea logs de accesos al servidor en la consola.
 - Dotenv. Gestionar archivos de configuración como .env
+
+Nota: copiar .env.example a .env antes de ejecutar (.env no se sube a git).

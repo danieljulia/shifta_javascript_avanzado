@@ -64,6 +64,13 @@ eventForm.addEventListener('submit', (e) => {
   showNotification('Evento añadido correctamente');
 });
 
+// Escapar texto del usuario antes de insertarlo con innerHTML (evita XSS)
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Renderizar eventos
 function renderEvents() {
   const now = dayjs();
@@ -94,7 +101,7 @@ function renderEvents() {
         <button class="btn-delete" onclick="deleteEvent(${event.id})" aria-label="Eliminar evento">
           ✕
         </button>
-        <h3>${event.name}</h3>
+        <h3>${escapeHtml(event.name)}</h3>
         <div class="event-details">
           <p class="event-date">
             <span class="icon">📅</span>

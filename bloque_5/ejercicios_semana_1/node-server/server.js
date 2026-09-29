@@ -71,7 +71,12 @@ app.post('/users', authenticateUser, (req, res) => {
   res.status(201).json(newUser);
 });
 
-// Error handling middleware
+// 404 handler (va antes del manejador de errores)
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Error handling middleware (siempre el último)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -80,14 +85,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
 // Start the server
+let server;
 const startServer = () => {
-  app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });
@@ -109,7 +110,7 @@ try {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received. Shutting down gracefully');
-  app.close(() => {
+  server.close(() => {
     console.log('Process terminated');
     process.exit(0);
   });

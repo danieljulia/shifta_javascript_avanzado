@@ -1,8 +1,10 @@
 import axios from "axios";
 
-const url_api = "https://api.thecatapi.com/v1/images/search?limit=10&api_key=ylX4blBYT9FaoVd6OhvR";
+// La clave se define en el archivo .env (ver .env.example)
+const apiKey = import.meta.env.VITE_CAT_API_KEY;
+const url_api = "https://api.thecatapi.com/v1/images/search";
 
-axios.get(url_api)
+axios.get(url_api, { params: { limit: 10, api_key: apiKey } })
   .then(response => {
     const results = response.data;
     results.forEach(result => {
