@@ -1,3 +1,4 @@
+<!-- Este componente no tiene datos propios: lee y modifica el contador del store global -->
 <template>
   <div class="card">
     <h3>Contador global</h3>
@@ -15,6 +16,7 @@ import { useGlobalStore } from '../stores/globalStore'
 export default {
   name: 'CounterPanel',
   setup() {
+    // Obtenemos el store: es el MISMO objeto en todos los componentes que lo usan
     const store = useGlobalStore()
     return { store }
   }

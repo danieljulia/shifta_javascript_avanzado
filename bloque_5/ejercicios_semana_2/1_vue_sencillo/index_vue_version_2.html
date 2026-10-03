@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <title>Contador con Vue 2</title>
 </head>
 <body>
-    <h1>Ejemplo vue</h1>
-   
+    <!-- Mismo ejemplo que index_vue_version_3.html, escrito con Vue 2.
+         Solo es para comparar: en el curso usamos Vue 3. -->
+    <h1>Ejemplo Vue 2</h1>
+
     <div id="app">
         <p>{{ counter }}</p>
-        <button @click="increment">Increment</button>
-        <button @click="decrement">Decrement</button>
+        <button @click="increment">Incrementar</button>
+        <button @click="decrement">Decrementar</button>
     </div>
 
+    <!-- Vue 2 desde CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script>
+        // En Vue 2 la aplicación se crea con "new Vue" y la opción el: '#app'
         new Vue({
             el: '#app',
+            // En Vue 2 data puede ser un objeto directamente (en componentes, una función)
             data: {
                 counter: 0
             },

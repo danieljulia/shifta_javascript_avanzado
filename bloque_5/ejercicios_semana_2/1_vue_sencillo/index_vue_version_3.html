@@ -1,36 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <title>Contador con Vue 3</title>
 </head>
 <body>
-    <h1>Ejemplo vue</h1>
-   
+    <h1>Ejemplo Vue 3</h1>
+
     <div id="app">
         <p>{{ counter }}</p>
-        <button @click="increment">Increment</button>
-        <button @click="decrement">Decrement</button>
+        <button @click="increment">Incrementar</button>
+        <button @click="decrement">Decrementar</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <!-- Vue 3 desde CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
+        // En Vue 3 la aplicación se crea con createApp(...).mount(...)
         const { createApp } = Vue;
 
-            createApp({
+        createApp({
+            // En Vue 3 data() es SIEMPRE una función que devuelve un objeto
             data() {
                 return {
-                counter: 0
+                    counter: 0
                 };
             },
             methods: {
                 increment() {
-                this.counter++;
+                    this.counter++;
                 },
                 decrement() {
-                this.counter--;
+                    this.counter--;
                 }
             }
-            }).mount('#app');
+        }).mount('#app');
     </script>
 </body>
 </html>

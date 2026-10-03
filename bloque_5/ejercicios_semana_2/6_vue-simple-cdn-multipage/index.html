@@ -1,38 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Home - My Portfolio</title>
+  <title>Inicio - My Portfolio</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <script src="js/app.js"></script> <!-- Load shared components -->
+  <!-- Componentes compartidos (SiteHeader, SiteFooter) -->
+  <script src="js/app.js"></script>
 </head>
 <body>
   <div id="app">
     <site-header></site-header>
 
     <main>
-      <h1>Welcome!</h1>
+      <h1>¡Bienvenido!</h1>
       <home-section></home-section>
     </main>
 
     <site-footer></site-footer>
   </div>
 
-  <!-- Inline template -->
+  <!-- Plantilla del componente, dentro del propio HTML -->
   <template id="home-template">
     <section>
-      <p>Hello 👋 I'm Alba Nora, a creative web developer based in Barcelona.</p>
-      <p>Explore my projects and learn more about me!</p>
+      <p>Hola 👋 Soy Alba Nora, desarrolladora web creativa en Barcelona.</p>
+      <p>¡Explora mis proyectos y conoce más sobre mí!</p>
     </section>
   </template>
 
   <script>
     const { createApp } = Vue;
 
+    // Componente local de esta página
     const HomeSection = {
       template: '#home-template'
     };
 
+    // SiteHeader y SiteFooter vienen de js/app.js; los registramos para usarlos en la plantilla
     createApp({
       components: { HomeSection, SiteHeader, SiteFooter }
     }).mount('#app');

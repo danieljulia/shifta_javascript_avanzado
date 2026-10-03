@@ -3,44 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Explorador Pokémon</title>
+  <!-- Vue 3 desde CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
     img { width: 150px; }
     .pokemon-card { border: 1px solid #ccc; padding: 20px; display: inline-block; margin-top: 20px; border-radius: 10px; }
     input, button { padding: 5px; font-size: 16px; margin: 5px; }
+    .error { color: red; }
   </style>
 </head>
 <body>
   <div id="app">
     <h1>Explorador Pokémon</h1>
 
+    <!-- v-model enlaza el input con "search"; Enter o el botón lanzan la búsqueda -->
     <input v-model="search" placeholder="Nombre o ID" @keyup.enter="buscarPokemon" />
     <button @click="buscarPokemon">Buscar</button>
 
+    <!-- La tarjeta solo se muestra cuando ya tenemos un pokemon -->
     <div v-if="pokemon" class="pokemon-card">
       <h2>#{{ pokemon.id }} - {{ pokemon.name.toUpperCase() }}</h2>
-      <img :src="pokemon.sprites.front_default" alt="pokemon">
+      <img :src="pokemon.sprites.front_default" :alt="pokemon.name">
       <p>Tipo: <span v-for="t in pokemon.types" :key="t.type.name">{{ t.type.name }} </span></p>
+      <!-- stats[0] es hp y stats[1] ataque en la respuesta de PokeAPI -->
       <p>HP: {{ pokemon.stats[0].base_stat }} | Ataque: {{ pokemon.stats[1].base_stat }}</p>
     </div>
 
-    <p v-if="error" style="color:red">{{ error }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 
   <script>
+    // Este ejemplo usa la Composition API: ref y setup() en lugar de data y methods
     const { createApp, ref } = Vue;
 
     createApp({
       setup() {
+        // ref crea un dato reactivo; en JS se accede con .value, en la plantilla directamente
         const pokemon = ref(null);
         const search = ref('');
         const error = ref('');
 
+        // Función asíncrona que llama a la API (https://pokeapi.co)
         const buscarPokemon = async () => {
-          if (!search.value) return;
+          const query = search.value.trim().toLowerCase();
+          if (!query) return;
           try {
-            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${search.value.toLowerCase()}`);
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(query)}`);
+            // fetch no lanza error si el servidor responde 404: hay que comprobar res.ok
             if (!res.ok) throw new Error('Pokémon no encontrado');
             pokemon.value = await res.json();
             error.value = '';
@@ -50,6 +60,7 @@
           }
         };
 
+        // Todo lo que devolvemos queda disponible en la plantilla
         return { pokemon, search, buscarPokemon, error };
       }
     }).mount('#app');

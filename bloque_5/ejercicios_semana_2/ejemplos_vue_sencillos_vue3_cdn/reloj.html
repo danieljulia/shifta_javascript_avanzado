@@ -55,8 +55,11 @@
         // Configuramos un intervalo que actualiza la hora cada segundo (1000ms)
         this.intervalId = setInterval(this.updateTime, 1000);
       },
-      // Hook del ciclo de vida beforeUnmount se ejecuta antes de que el componente se desmonte
-     
+      // Hook del ciclo de vida beforeUnmount: se ejecuta antes de que la aplicación se desmonte.
+      // Hay que limpiar el temporizador para que no siga ejecutándose
+      beforeUnmount() {
+        clearInterval(this.intervalId);
+      },
       // Métodos de la aplicación
       methods: {
         // Actualiza la hora actual

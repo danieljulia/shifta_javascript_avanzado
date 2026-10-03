@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
-  <title>Explorador Pokémon (corregido)</title>
+  <title>Explorador Pokémon (versión mejorada)</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; text-align: center; margin: 40px; }
@@ -15,11 +15,14 @@
   </style>
 </head>
 <body>
+  <!-- Versión mejorada de index.html: estado de carga, botones anterior/siguiente,
+       imagen con fallback, habilidades y búsqueda de estadísticas por nombre -->
   <div id="app">
     <h1>Explorador Pokémon</h1>
 
     <input v-model="search" placeholder="Nombre o ID" @keyup.enter="onSearch" />
     <button @click="onSearch">Buscar</button>
+    <!-- :disabled desactiva el botón cuando no se puede retroceder -->
     <button @click="prevPokemon" :disabled="!pokemon || pokemon.id <= 1">Anterior</button>
     <button @click="nextPokemon" :disabled="!pokemon">Siguiente</button>
 
@@ -48,6 +51,7 @@
   </div>
 
   <script>
+    // ref = datos reactivos, computed = valores calculados a partir de otros datos
     const { createApp, ref, computed } = Vue;
 
     createApp({
@@ -57,7 +61,7 @@
         const error = ref('');
         const loading = ref(false);
 
-        // conversión segura del parámetro y trim
+        // Pide un pokemon por nombre o id: limpia el texto, gestiona carga y errores
         const fetchPokemon = async (nameOrId) => {
           const q = String(nameOrId ?? '').trim().toLowerCase();
           if (!q) {
@@ -77,6 +81,7 @@
             error.value = err.message || 'Error al obtener datos';
             pokemon.value = null;
           } finally {
+            // finally se ejecuta siempre, haya ido bien o mal
             loading.value = false;
           }
         };
@@ -94,6 +99,7 @@
           fetchPokemon(Number(pokemon.value.id) + 1);
         };
 
+        // computed: se recalcula solo cuando cambia "pokemon"
         const imageSrc = computed(() => {
           if (!pokemon.value) return '';
           // fallback a official-artwork si existe
@@ -103,12 +109,10 @@
             || '';
         });
 
+        // Devuelve el valor de una estadística ('hp', 'attack'...) buscándola por nombre
         const stat = (name) => {
           if (!pokemon.value) return '-';
-          const s = pokemon.value.stats.find(s => {
-            const key = s.stat.name.toLowerCase();
-            return key.includes(name);
-          });
+          const s = pokemon.value.stats.find(s => s.stat.name === name);
           return s ? s.base_stat : '-';
         };
 

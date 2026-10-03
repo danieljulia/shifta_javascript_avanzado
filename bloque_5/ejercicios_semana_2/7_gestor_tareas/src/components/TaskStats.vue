@@ -1,3 +1,4 @@
+<!-- Estadísticas calculadas con computed a partir de la prop tasks -->
 <template>
   <div class="stats">
     <span>📊 Total: {{ tasks.length }}</span>

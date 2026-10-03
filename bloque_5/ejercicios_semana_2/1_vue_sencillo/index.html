@@ -1,83 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Simple Vue.js Example</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
-</head>
-<body>
-
-    <!--- 
-    ejecutar con parcel 
-    
-    parcel index.html 
-
-    -->
-    
-    <div id="app">
-        <h1>{{ title }}</h1>
-        
-        <div class="counter">
-            <p>Count: {{ count }}</p>
-            <button @click="increment">Increment</button>
-            <button @click="decrement">Decrement</button>
-        </div>
-
-        <div class="todo-list">
-            <h2>Todo List</h2>
-            <input 
-                v-model="newTodo" 
-                @keyup.enter="addTodo" 
-                placeholder="Add a new todo"
-            >
-            <ul>
-                <li v-for="(todo, index) in todos" :key="index">
-                    <input 
-                        type="checkbox" 
-                        v-model="todo.completed"
-                    >
-                    <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
-                        {{ todo.text }}
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <script>
-        const { createApp } = Vue
-
-        createApp({
-            data() {
-                return {
-                    title: 'Vue.js Demo',
-                    count: 0,
-                    newTodo: '',
-                    todos: [
-                        { text: 'Learn Vue.js!', completed: true },
-                        { text: 'Build something cool', completed: false }
-                    ]
-                }
-            },
-            methods: {
-                increment() {
-                    this.count++
-                },
-                decrement() {
-                    this.count--
-                },
-                addTodo() {
-                    if (this.newTodo.trim()) {
-                        this.todos.push({
-                            text: this.newTodo,
-                            completed: false
-                        })
-                        this.newTodo = ''
-                    }
-                }
-            }
-        }).mount('#app')
-    </script>
-
+    <meta charset="UTF-8">
+    <title>Ejemplo sencillo de Vue.js</title>
+    <!-- Vue 3 cargado desde un CDN: no hace falta instalar ni compilar nada -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         #app {
             font-family: Arial, sans-serif;
@@ -98,10 +25,6 @@
         .todo-list {
             margin-top: 20px;
         }
-        input[type="text"] {
-            padding: 5px;
-            width: 200px;
-        }
         ul {
             list-style-type: none;
             padding: 0;
@@ -110,5 +33,82 @@
             margin: 10px 0;
         }
     </style>
+</head>
+<body>
+
+    <!-- Vue controla todo lo que hay dentro de este div (se monta con .mount('#app')) -->
+    <div id="app">
+        <!-- {{ }} interpolación: muestra el valor de un dato -->
+        <h1>{{ title }}</h1>
+
+        <div class="counter">
+            <p>Contador: {{ count }}</p>
+            <!-- @click es la forma corta de v-on:click: llama a un método -->
+            <button @click="increment">Incrementar</button>
+            <button @click="decrement">Decrementar</button>
+        </div>
+
+        <div class="todo-list">
+            <h2>Lista de tareas</h2>
+            <!-- v-model: enlace bidireccional entre el input y el dato "newTodo".
+                 @keyup.enter: solo reacciona al pulsar la tecla Enter -->
+            <input
+                v-model="newTodo"
+                @keyup.enter="addTodo"
+                placeholder="Añade una tarea"
+            >
+            <button @click="addTodo">Añadir</button>
+            <ul>
+                <!-- v-for repite el <li> por cada elemento de "todos".
+                     :key ayuda a Vue a identificar cada elemento (debe ser único) -->
+                <li v-for="todo in todos" :key="todo.id">
+                    <input type="checkbox" v-model="todo.completed">
+                    <!-- :style es v-bind:style: el estilo depende del dato "completed" -->
+                    <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
+                        {{ todo.text }}
+                    </span>
+                </li>
+            </ul>
+            <!-- v-if: solo se muestra si la condición se cumple -->
+            <p v-if="todos.length === 0">No hay tareas</p>
+        </div>
+    </div>
+
+    <script>
+        // Vue se carga como variable global; sacamos createApp de ella
+        const { createApp } = Vue
+
+        createApp({
+            // data: el estado de la aplicación. Si cambia, la pantalla se actualiza sola
+            data() {
+                return {
+                    title: 'Demo de Vue.js',
+                    count: 0,
+                    newTodo: '',
+                    nextId: 3, // id para la siguiente tarea
+                    todos: [
+                        { id: 1, text: 'Aprender Vue.js', completed: true },
+                        { id: 2, text: 'Construir algo genial', completed: false }
+                    ]
+                }
+            },
+            // methods: funciones que podemos llamar desde la plantilla
+            methods: {
+                increment() {
+                    this.count++
+                },
+                decrement() {
+                    this.count--
+                },
+                addTodo() {
+                    const text = this.newTodo.trim()
+                    if (text) {
+                        this.todos.push({ id: this.nextId++, text, completed: false })
+                        this.newTodo = '' // vaciamos el input
+                    }
+                }
+            }
+        }).mount('#app') // conectamos la aplicación con el div#app
+    </script>
 </body>
 </html>

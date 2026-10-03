@@ -8,7 +8,7 @@ Aplicación sencilla de gestión de tareas creada con Vite + Vue.js 3.
 - ✅ Marcar tareas como completadas
 - ✅ Eliminar tareas
 - ✅ Filtrar por estado (todas, pendientes, completadas)
-- ✅ Persistencia en localStorage
+- ✅ Persistencia en localStorage (con un `watch`)
 - ✅ Estadísticas de tareas
 
 ## Estructura de componentes
@@ -20,6 +20,13 @@ App.vue
 ├── TaskItem.vue      → Cada tarea individual
 └── TaskStats.vue     → Estadísticas
 ```
+
+## Conceptos que practica
+
+- Comunicación entre componentes: **props** (hacia abajo) y **eventos** con `$emit` (hacia arriba)
+- `computed` para tareas filtradas, mensajes y estadísticas
+- `watch` con `deep: true` para guardar en `localStorage`
+- `v-for`, `v-if` / `v-else`, `:class`, `@submit.prevent`
 
 ## Instalación
 

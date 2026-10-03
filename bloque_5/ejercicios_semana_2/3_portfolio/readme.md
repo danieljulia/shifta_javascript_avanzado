@@ -1,10 +1,14 @@
-En este ejemplo más avanzado usamos npm para instalar la librearia de vue y vite para ejecutarlo en modo dev o crear la versión de distribución
+# 3_portfolio
 
-Para verlo en modo dev
+Portfolio sencillo con Vue 3 + Vite. Los contenidos se leen de `public/data.json` con `fetch`
+(en el hook `mounted`) y se pintan con `v-for`.
 
-vite 
+`vite.config.js` usa `base: './'` para que las rutas sean relativas y la carpeta `dist`
+funcione en cualquier subcarpeta del servidor.
 
-Para crear versión de producción ( se genera en la carpeta dist)
-
-vite build 
-
+```bash
+npm install
+npm run dev        # modo desarrollo
+npm run build      # versión de producción en dist
+npm run preview    # prueba local de dist
+```

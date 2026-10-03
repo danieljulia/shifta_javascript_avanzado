@@ -11,7 +11,7 @@
 
   <div id="app">
     <h2>Contador de Visitas</h2>
-    <p>Has visitado esta página {{ visits }} veces durante esta sesión.</p>
+    <p>Has visitado esta página {{ visits }} veces en este navegador.</p>
   </div>
 
   <script>
@@ -28,14 +28,10 @@
       },
       // Hook del ciclo de vida created se ejecuta cuando la instancia es creada
       created() {
-        // Verificamos si ya existe un valor guardado en localStorage
-        if (localStorage.getItem('visits')) {
-          // Si existe, lo recuperamos, lo convertimos a número y le sumamos 1
-          this.visits = parseInt(localStorage.getItem('visits')) + 1;
-        } else {
-          // Si no existe, esta es la primera visita
-          this.visits = 1;
-        }
+        // localStorage conserva el valor aunque se cierre el navegador (sessionStorage solo durante la sesión)
+        // Si no hay valor guardado, getItem devuelve null y partimos de 0
+        const previous = parseInt(localStorage.getItem('visits')) || 0;
+        this.visits = previous + 1;
         // Guardamos el nuevo valor en localStorage
         localStorage.setItem('visits', this.visits);
       }

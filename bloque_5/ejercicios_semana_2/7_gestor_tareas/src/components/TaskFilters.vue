@@ -1,3 +1,4 @@
+<!-- Botones de filtro. :class aplica la clase "active" al botón del filtro actual -->
 <template>
   <div class="filters">
     <button 
@@ -27,6 +28,7 @@
 <script>
 export default {
   name: 'TaskFilters',
+  // prop recibida del padre y evento emitido hacia el padre
   props: {
     currentFilter: {
       type: String,

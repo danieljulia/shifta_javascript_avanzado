@@ -77,8 +77,6 @@
     <!-- Contenedor de la imagen -->
     <div class="image-container">
       <!-- Muestra la imagen si imageUrl tiene un valor -->
-
-
       <img v-if="imageUrl" :src="imageUrl" :alt="imageAlt" />
       <!-- Muestra un mensaje si no hay imagen -->
       <p v-else class="no-image">Haz clic en el botón para cargar una imagen aleatoria</p>
@@ -100,11 +98,10 @@
       },
       // Métodos de la aplicación
       methods: {
-        // Obtiene una imagen aleatoria de la API de Unsplash
+        // Genera la URL de una imagen aleatoria del servicio Lorem Picsum
         async fetchRandomImage() {
           try {
-            // Usamos la API de Unsplash que proporciona imágenes aleatorias
-            // Los parámetros pueden personalizarse para obtener diferentes tipos de imágenes
+            // picsum.photos devuelve una imagen distinta según la URL: https://picsum.photos/ancho/alto
             const width = 800;
             const height = 600;
             

@@ -19,10 +19,10 @@ Esta carpeta contiene ejemplos básicos de Vue 3 utilizando el CDN (sin necesida
 ## Ejemplos incluidos
 
 1. **contador.html** - Contador simple con botones de incremento y decremento
-2. **contador_visitas.html** - Contador de visitas usando localStorage
-3. **modal.html** - Modal básico con apertura y cierre
-4. **reloj.html** - Reloj digital que se actualiza cada segundo
-5. **imagenes_aleatorias.html** - Generador de imágenes aleatorias usando API
+2. **contador_visitas.html** - Contador de visitas usando localStorage (hook `created`)
+3. **modal.html** - Modal con `v-if`; se cierra con la X, el botón, el fondo o la tecla Escape
+4. **reloj.html** - Reloj digital con `setInterval` (se limpia en `beforeUnmount`)
+5. **imagenes_aleatorias.html** - Imágenes aleatorias con Lorem Picsum
 
 ## Cómo usar
 

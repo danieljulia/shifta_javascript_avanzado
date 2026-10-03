@@ -69,8 +69,9 @@
     <!-- Botón para abrir el modal -->
     <button @click="openModal">Abrir Modal</button>
 
-    <!-- Modal - se muestra solo si isModalOpen es true -->
-    <div v-if="isModalOpen" class="modal">
+    <!-- Modal - se muestra solo si isModalOpen es true.
+         @click.self: cierra al pulsar en el fondo oscuro, pero no dentro del contenido -->
+    <div v-if="isModalOpen" class="modal" @click.self="closeModal">
       <div class="modal-content">
         <!-- Botón X para cerrar -->
         <span class="close" @click="closeModal">&times;</span>
@@ -103,6 +104,12 @@
         closeModal() {
           this.isModalOpen = false;
         }
+      },
+      // mounted: la aplicación ya está en pantalla. Cerramos el modal con la tecla Escape
+      mounted() {
+        window.addEventListener('keyup', (e) => {
+          if (e.key === 'Escape') this.closeModal();
+        });
       }
     }).mount('#app');  // Montamos la aplicación en el elemento con id="app"
   </script>
