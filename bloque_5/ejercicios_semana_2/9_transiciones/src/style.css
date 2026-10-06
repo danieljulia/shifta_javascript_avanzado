@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f6fa;
+  padding: 30px;
+  color: #2f3640;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  margin-bottom: 20px;
+  color: #636e72;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #0984e3;
+  color: white;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #636e72;
+}
+
+button + button {
+  margin-left: 8px;
+}
+
+.box {
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #0984e3;
+  color: white;
+  text-align: center;
+}
+
+.notification {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #00b894;
+  color: white;
+}
+
+/* === Transición "fade": solo cambia la opacidad ===
+   Vue añade estas clases automáticamente según el estado de la animación */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* === Transición "slide": opacidad + desplazamiento horizontal === */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* === Transición "zoom" para el cambio de vista con mode="out-in" === */
+.zoom-enter-active,
+.zoom-leave-active {
+  transition: all 0.25s ease;
+}
+
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
