@@ -5,6 +5,8 @@
     <title>DeepAI</title>
     <!-- config.js contiene la API key y está en .gitignore -->
     <!-- Cópialo desde config.example.js y pon tu clave real -->
+    <!-- Así la clave NO se sube a git: config.example.js (sin clave) sí se sube
+         como plantilla, y config.js (con la clave real) queda solo en tu máquina -->
     <script src="config.js"></script>
 </head>
 <body>
@@ -22,6 +24,13 @@ Es de pago, unos 0.05€ por cada imagen generada.
 
 La API key se carga desde config.js (ignorado por .gitignore).
 Copia config.example.js → config.js y pon tu clave real.
+¿Por qué este patrón? Si la clave estuviera escrita en un archivo que se sube a git,
+cualquiera con acceso al repositorio (o al historial) podría robarla y gastar tu saldo.
+config.js existe solo en tu ordenador; config.example.js sirve de plantilla pública.
+
+OJO: poner la clave en el navegador solo es aceptable para pruebas locales en clase.
+En producción, la llamada a DeepAI debería hacerse desde un servidor propio (proxy),
+como en el ejemplo de openai/index.html.
 
 Posibles modificaciones:
 - que el usuario pueda escribir el prompt (en un textarea)
@@ -29,6 +38,10 @@ Posibles modificaciones:
 - etc..
 
 */
+
+// Petición POST a la API de DeepAI con fetch.
+// La API key viaja en la cabecera "api-key" (la lee de CONFIG, definido en config.js).
+// El cuerpo va en formato form-urlencoded: "text=<prompt>" es el texto a ilustrar.
 fetch("https://api.deepai.org/api/text2img", {
     method: "POST",
     headers: {
@@ -37,11 +50,16 @@ fetch("https://api.deepai.org/api/text2img", {
     },
     body: "text=a cat sitting on a table"
 })
-.then(response => response.json())
+.then(response => response.json()) // convertimos la respuesta a objeto JS
 .then(data => {
     console.log(data);
-    document.getElementById("image").src = data.output_url; // Display image
+    // DeepAI devuelve { output_url: "https://..." } con la URL de la imagen generada.
+    // Si la clave es incorrecta o no hay saldo, data.output_url será undefined
+    // y data contendrá un campo "err" con el motivo (mirad la consola).
+    document.getElementById("image").src = data.output_url; // mostramos la imagen
 })
+// catch captura errores de red o de parseo del JSON
+// (los errores de la API, como una clave inválida, llegan como JSON en el .then anterior)
 .catch(error => console.error("Error:", error));
 
 </script>

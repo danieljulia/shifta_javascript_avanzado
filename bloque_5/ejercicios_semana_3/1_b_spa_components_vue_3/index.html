@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue SPA Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Punto de montaje: aquí Vue 3 "montará" la aplicación con app.mount('#app') -->
+  <div id="app">
+    <div class="nav">
+      <!-- <router-link> es el enlace del router: navega SIN recargar la página.
+           El atributo "to" indica la ruta destino (mirar las rutas en app.js). -->
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
+      <router-link to="/contact">Contact</router-link>
+    </div>
+
+    <!-- <transition> aplica una animación CSS (clases .fade-*) al cambiar de página.
+         mode="out-in": primero sale la vista actual y después entra la nueva. -->
+    <transition name="fade" mode="out-in">
+      <!-- <router-view> es el "hueco" donde el router dibuja el componente
+           que corresponde a la ruta actual (Home, About, Contact o NotFound). -->
+      <router-view></router-view>
+    </transition>
+  </div>
+
+  <!-- Vue 3 y Vue Router 4 cargados por CDN (versión "global": exponen
+       los objetos globales Vue y VueRouter en window, sin necesidad de npm) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+
+  <!-- Componentes de cada página: se cargan ANTES de app.js porque allí
+       se usan las constantes Home, About, Contact y NotFound para definir las rutas.
+       Cada archivo define un objeto global con su propiedad "template". -->
+  <script src="templates/home.js"></script>
+  <script src="templates/about.js"></script>
+  <script src="templates/contact.js"></script>
+  <script src="templates/not-found.js"></script>
+
+  <!-- Script principal: crea el router, crea la app Vue y la monta en #app -->
+  <script src="app.js"></script>
+</body>
+</html>

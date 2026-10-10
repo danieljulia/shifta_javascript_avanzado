@@ -1,38 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usuarios con Vue.js</title>
-    <!-- Vue 3 desde CDN -->
+    <!-- Vue 3 desde CDN: expone el objeto global "Vue" -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
+    <!-- #app es el punto de montaje: Vue controla todo lo que hay dentro de este div -->
     <div id="app">
       <h1>Usuarios</h1>
 
+      <!-- v-for repite el <li> por cada usuario; :key identifica cada elemento de forma única -->
       <ul>
         <li v-for="usuario in usuarios" :key="usuario.email">
           {{ usuario.nombre }} ({{ usuario.email }})
         </li>
       </ul>
+
+      <!-- Mensaje de error visible solo si la carga falla (v-if renderiza condicionalmente) -->
+      <p v-if="error" style="color: red">{{ error }}</p>
     </div>
     <script>
+      // Extraemos createApp del objeto global Vue (cargado por CDN)
       const { createApp } = Vue;
+
+      // createApp crea la aplicación y .mount("#app") la conecta con el div de arriba
       createApp({
+        // data() devuelve el estado REACTIVO: al cambiar "usuarios" o "error",
+        // Vue actualiza automáticamente el HTML
         data() {
           return {
             usuarios: [],
+            error: null,
           };
         },
+        // mounted() se ejecuta una vez montada la app: lugar típico para cargar datos
         mounted() {
+          // IMPORTANTE: fetch no funciona abriendo el HTML con doble clic (file://).
+          // Hay que servir la carpeta con un servidor local, por ejemplo:
+          //   npx serve .     o bien     python3 -m http.server
           fetch("data.json")
-            .then(response => response.json())
+            .then(response => {
+              // response.ok es false si el servidor responde 404, 500, etc.
+              if (!response.ok) {
+                throw new Error("Error HTTP: " + response.status);
+              }
+              return response.json(); // convierte el cuerpo de la respuesta a objeto JS
+            })
             .then(data => {
+              // Al asignar this.usuarios, la reactividad de Vue repinta la lista
               this.usuarios = data.usuarios;
             })
             .catch(err => {
+              // Cualquier fallo (red, JSON mal formado, error HTTP) llega aquí
               console.error(err.message);
+              this.error = "No se pudieron cargar los usuarios: " + err.message;
             });
         }
       }).mount("#app");

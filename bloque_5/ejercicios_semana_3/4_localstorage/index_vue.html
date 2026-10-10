@@ -3,27 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>Simulación Backend con Vue</title>
+  <!-- Vue 3 desde CDN: expone el objeto global "Vue" -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
+  <!-- #app es el punto de montaje: Vue controla todo lo que hay dentro de este div -->
   <div id="app">
     <h2>Usuarios</h2>
     <ul>
+      <!-- v-for repite el <li> por cada usuario; :key ayuda a Vue a identificar cada elemento -->
       <li v-for="u in usuarios" :key="u.id">
         {{ u.nombre }} ({{ u.email }})
         <button @click="eliminarUsuario(u.id)">❌</button>
       </li>
     </ul>
 
+    <!-- v-model enlaza el input con la variable de data: cambios bidireccionales automáticos -->
     <input v-model="nuevoNombre" placeholder="Nombre">
     <input v-model="nuevoEmail" placeholder="Email">
+    <!-- @click es la abreviatura de v-on:click: llama al método agregarUsuario -->
     <button @click="agregarUsuario">Agregar usuario</button>
   </div>
 
   <script>
+    // Extraemos createApp del objeto global Vue (cargado por CDN)
     const { createApp } = Vue;
 
+    // createApp crea la aplicación y .mount("#app") la conecta con el div de arriba
     createApp({
+      // data() devuelve el estado REACTIVO: cuando una variable cambia,
+      // Vue actualiza automáticamente el HTML que la usa
       data() {
         return {
           usuarios: [],
@@ -31,13 +40,16 @@
           nuevoEmail: ""
         };
       },
+      // mounted() se ejecuta una sola vez, cuando Vue ya ha montado el componente en el DOM.
+      // Es el lugar típico para cargar datos iniciales (localStorage, fetch a APIs...)
       mounted() {
         // Cargar datos de localStorage al iniciar
         const guardados = localStorage.getItem("usuarios");
         if (guardados) {
+          // localStorage solo guarda texto: JSON.parse convierte el string de vuelta a array
           this.usuarios = JSON.parse(guardados);
         } else {
-          // inicialización
+          // Primera visita: inicializamos con datos de ejemplo y los persistimos
           this.usuarios = [
             { id: 1, nombre: "Ana", email: "ana@example.com" },
             { id: 2, nombre: "Luis", email: "luis@example.com" }
@@ -46,21 +58,26 @@
         }
       },
       methods: {
+        // Guardamos el array completo en localStorage como texto JSON
         guardarUsuarios() {
           localStorage.setItem("usuarios", JSON.stringify(this.usuarios));
         },
         agregarUsuario() {
+          // Validación mínima: no agregar si falta nombre o email
           if (!this.nuevoNombre || !this.nuevoEmail) return;
+          // push modifica el array reactivo → Vue repinta la lista solo
           this.usuarios.push({
-            id: Date.now(),
+            id: Date.now(), // ID "único" basado en la fecha actual (suficiente para la demo)
             nombre: this.nuevoNombre,
             email: this.nuevoEmail
           });
           this.guardarUsuarios();
+          // Limpiamos los inputs gracias al enlace bidireccional de v-model
           this.nuevoNombre = "";
           this.nuevoEmail = "";
         },
         eliminarUsuario(id) {
+          // filter crea un nuevo array sin el usuario borrado → Vue detecta el cambio
           this.usuarios = this.usuarios.filter(u => u.id !== id);
           this.guardarUsuarios();
         }

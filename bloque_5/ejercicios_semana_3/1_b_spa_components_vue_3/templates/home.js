@@ -1,3 +1,6 @@
+// Componente "Home": un objeto de opciones de Vue con su plantilla (template).
+// Se define como constante global; app.js lo usa al declarar las rutas.
+// En Vue 3 estos objetos funcionan igual que en Vue 2 (Options API).
 const Home = {
     template: `
       <div class="page">

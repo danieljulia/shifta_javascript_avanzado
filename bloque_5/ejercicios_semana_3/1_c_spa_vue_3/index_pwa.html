@@ -20,24 +20,30 @@
 <body>
   <div id="app">
 
-    
+    <!-- router-link: enlace de navegación interna gestionado por Vue Router
+         (cambia la vista sin recargar la página). -->
     <div class="nav">
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/contact">Contact</router-link>
     </div>
-    
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
+
+    <!-- router-view: punto donde se renderiza el componente de la ruta activa.
+         En Vue Router 4, para aplicar una transición usamos v-slot="{ Component }"
+         y <component :is="Component"> dentro de <transition>. -->
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 
-  <!-- Vue and Vue Router via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.5.3/vue-router.min.js"></script>
+  <!-- Vue 3 y Vue Router 4 desde CDN (build "global": exponen Vue y VueRouter) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
 
   <script>
-    // Define route components
+    // Componentes de cada ruta (objetos con un template).
     const Home = {
       template: `
         <div class="page">
@@ -85,28 +91,45 @@
       `
     };
 
-    // Define routes
+    // Tabla de rutas. La ruta comodín en Vue Router 4 usa :pathMatch(.*)*
+    // (en Vue Router 3 era '*').
     const routes = [
       { path: '/', component: Home },
       { path: '/about', component: About },
       { path: '/contact', component: Contact },
-      { path: '*', component: NotFound }
+      { path: '/:pathMatch(.*)*', component: NotFound }
     ];
 
-    // Create router instance
-    const router = new VueRouter({
-      routes,
-      //mode: 'history'
+    // createRouter + createWebHashHistory: enrutador con rutas tras el #
+    // (/#/about), para que funcione con archivos estáticos sin configurar servidor.
+    const router = VueRouter.createRouter({
+      history: VueRouter.createWebHashHistory(),
+      routes
     });
 
+    // createApp crea la aplicación Vue 3 (sustituye a `new Vue(...)` de Vue 2).
+    const app = Vue.createApp({});
 
+    // Instalamos el router como plugin y montamos la app en <div id="app">.
+    app.use(router);
+    app.mount('#app');
+  </script>
 
-    // Create Vue instance
-    const app = new Vue({
-      router
-    }).$mount('#app');
-
-
+  <script>
+    // Registro del service worker: es lo que convierte la SPA en una PWA.
+    // Comprobamos que el navegador lo soporte y registramos sw.js, que se
+    // encargará de cachear los archivos para que la app funcione offline.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
   </script>
 </body>
 </html>

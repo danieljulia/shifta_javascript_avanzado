@@ -1,23 +1,28 @@
+<!-- App con Options API: consume una API REST de prueba (MockAPI) y lista proyectos -->
 <template>
   <main class="layout">
     <h1>Proyectos (MockAPI)</h1>
 
     <div class="toolbar">
+      <!-- :disabled es la abreviatura de v-bind:disabled; el botón se desactiva
+           mientras loading sea true para evitar peticiones duplicadas -->
       <button @click="fetchProyectos" :disabled="loading">
         {{ loading ? 'Cargando...' : 'Recargar' }}
       </button>
     </div>
 
+    <!-- Renderizado condicional: v-if / v-else-if / v-else muestran un solo estado -->
     <p v-if="error" class="error">Error: {{ error }}</p>
     <p v-else-if="loading" class="loading">Cargando datos...</p>
 
     <ul v-else class="grid">
+      <!-- v-for renderiza la lista; :key ayuda a Vue a identificar cada elemento -->
       <li v-for="p in proyectos" :key="p.id" class="card">
         <h2 class="card-title">{{ p.name }}</h2>
         <p v-if="p.categoria" class="categoria">Categoría: {{ p.categoria }}</p>
         <img
-          v-if="p.avatar || p.avatar"
-          :src="p.avatar || p.avatar"
+          v-if="p.avatar"
+          :src="p.avatar"
           alt=""
           class="thumb"
         />
@@ -26,6 +31,7 @@
       </li>
     </ul>
 
+    <!-- Mensaje cuando la petición fue bien pero la lista está vacía -->
     <p v-if="!loading && !error && proyectos.length === 0" class="empty">
       Sin proyectos.
     </p>
@@ -33,10 +39,16 @@
 </template>
 
 <script>
+// Endpoint REST de prueba creado en mockapi.io (devuelve un array de proyectos)
 const API_URL = 'https://67c6b62b351c081993fe62eb.mockapi.io/api/v1/proyectos';
 
+// Este componente usa la Options API de Vue 3 (data, methods, created...).
+// Es una de las dos formas de escribir componentes en Vue 3; la otra es la
+// Composition API (<script setup>, ref(), onMounted()...)
 export default {
   name: 'App',
+  // data() devuelve el estado reactivo del componente:
+  // cuando una de estas propiedades cambia, Vue vuelve a renderizar el template
   data() {
     return {
       proyectos: [],
@@ -45,20 +57,25 @@ export default {
     };
   },
   methods: {
+    // Petición asíncrona a la API con fetch
     async fetchProyectos() {
       this.loading = true;
       this.error = null;
       try {
         const res = await fetch(API_URL, { cache: 'no-store' });
+        // fetch no lanza error en respuestas 4xx/5xx: hay que comprobar res.ok
         if (!res.ok) throw new Error('HTTP ' + res.status);
         this.proyectos = await res.json();
       } catch (e) {
         this.error = e.message;
       } finally {
+        // finally se ejecuta siempre, haya error o no
         this.loading = false;
       }
     }
   },
+  // created() es un hook del ciclo de vida: se ejecuta al crear el componente,
+  // antes de montarlo en el DOM. Ideal para lanzar la carga inicial de datos
   created() {
     this.fetchProyectos();
   }

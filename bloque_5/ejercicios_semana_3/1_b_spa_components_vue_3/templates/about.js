@@ -1,3 +1,4 @@
+// Componente "About": se muestra cuando la ruta activa es /about.
 const About = {
     template: `
       <div class="page">

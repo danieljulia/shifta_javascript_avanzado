@@ -1,4 +1,6 @@
-const CACHE_NAME = 'vue-spa-pwa-v1';
+// Nombre y versión del caché. Al cambiarlo (v1 -> v2), el evento "activate"
+// borra el caché antiguo y obliga a descargar los archivos nuevos (Vue 3).
+const CACHE_NAME = 'vue-spa-pwa-v2';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -7,11 +9,14 @@ const ASSETS_TO_CACHE = [
     '/manifest.json',
     '/offline.html',
     '/images/fallback.png',
-    'https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.5.3/vue-router.min.js',
+    'https://unpkg.com/vue@3/dist/vue.global.js',
+    'https://unpkg.com/vue-router@4/dist/vue-router.global.js',
     'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
 ];
 
+// Ciclo del service worker - evento "install":
+// se ejecuta una vez al registrar el SW. Aquí precargamos en el caché
+// todos los archivos necesarios para que la app funcione offline.
 self.addEventListener('install', event => {
     event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,6 +26,9 @@ self.addEventListener('install', event => {
     );
 });
 
+// Evento "fetch": intercepta cada petición de red de la página.
+// Estrategia "cache first": si el recurso está en caché lo devolvemos;
+// si no, lo pedimos a la red y lo guardamos para la próxima vez.
 self.addEventListener('fetch', event => {
     event.respondWith(
     caches.match(event.request)
@@ -39,18 +47,18 @@ self.addEventListener('fetch', event => {
             });
         })
         .catch(() => {
-        // Fallback for image requests
+        // Si todo falla (sin red y sin caché), devolvemos respuestas de reserva:
         if (event.request.url.match(/\\.(jpg|jpeg|png|gif|svg)$/)) {
-            return caches.match('/images/fallback.png');
+            return caches.match('/images/fallback.png'); // imagen de reserva
         }
-        // Fallback for HTML
-        return caches.match('/offline.html');
+        return caches.match('/offline.html'); // página offline de reserva
         })
     );
 });
 
+// Evento "activate": se ejecuta cuando el nuevo SW toma el control.
+// Borramos los cachés de versiones anteriores para no acumular archivos viejos.
 self.addEventListener('activate', event => {
-    // Clean up old cache versions
     event.waitUntil(
     caches.keys().then(cacheNames => {
         return Promise.all(
@@ -63,4 +71,3 @@ self.addEventListener('activate', event => {
     })
     );
 });
-    

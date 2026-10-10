@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vue 3 + Supabase — Lista de tareas</title>
+
+  <!--
+    ORDEN DE LOS SCRIPTS (importante):
+    1. config.js        → credenciales (copiar desde config.example.js, está en .gitignore)
+    2. supabase-js      → librería oficial de Supabase, expone el global `supabase`
+    3. Vue 3            → expone el global `Vue`
+    4. script de la app → usa todo lo anterior
+  -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    #app {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 { font-size: 1.4rem; }
+    .formulario { display: flex; gap: 8px; margin-bottom: 16px; }
+    .formulario input { flex: 1; padding: 8px; }
+    .formulario button {
+      background: #3ecf8e; /* color verde característico de Supabase */
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+    ul { list-style: none; padding: 0; }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    li .texto { flex: 1; }
+    li .completada { text-decoration: line-through; color: #999; }
+    li .borrar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .aviso {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      padding: 12px;
+    }
+    .error { color: red; }
+    .cargando { color: #666; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Lista de tareas con Vue 3 + Supabase</h1>
+
+    <!--
+      Aviso si config.js no se ha cargado (por ejemplo, no existe todavía).
+      `configOk` se comprueba en mounted().
+    -->
+    <p v-if="!configOk" class="aviso">
+      ⚠️ Falta el archivo <code>config.js</code>.<br />
+      Copia <code>config.example.js</code> como <code>config.js</code>
+      y pon tu <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code>.
+    </p>
+
+    <template v-else>
+      <div class="formulario">
+        <input
+          v-model="nuevaTarea"
+          placeholder="Nueva tarea..."
+          @keyup.enter="addTarea"
+        />
+        <button @click="addTarea">Añadir</button>
+      </div>
+
+      <p v-if="cargando" class="cargando">Cargando...</p>
+      <p v-if="error" class="error">{{ error }}</p>
+
+      <ul>
+        <li v-for="tarea in tareas" :key="tarea.id">
+          <input
+            type="checkbox"
+            :checked="tarea.completada"
+            @change="toggleTarea(tarea)"
+          />
+          <span class="texto" :class="{ completada: tarea.completada }">
+            {{ tarea.texto }}
+          </span>
+          <button class="borrar" @click="borrarTarea(tarea.id)">❌</button>
+        </li>
+      </ul>
+
+      <p v-if="!cargando && tareas.length === 0">No hay tareas todavía.</p>
+    </template>
+  </div>
+
+  <script>
+    /*
+      ¿QUÉ ES SUPABASE?
+      Supabase es una base de datos PostgreSQL "como servicio" (una alternativa
+      open source a Firebase). Nos da una API REST lista para usar sobre las
+      tablas que creemos, y la librería supabase-js nos permite hacer
+      consultas desde el navegador sin escribir un backend.
+
+      createClient(url, anonKey) crea el cliente conectado a nuestro proyecto:
+      - url:     la URL pública del proyecto (Project Settings → API).
+      - anonKey: la clave "anon" (pública por diseño, pero protegida por las
+                 políticas RLS de la base de datos; ver README.md).
+
+      Las consultas devuelven { data, error }:
+      - data:  el resultado (un array de filas, o null).
+      - error: un objeto con el mensaje si algo falló (o null si todo bien).
+      A diferencia de fetch(), NO lanzan excepciones: hay que mirar `error`.
+
+      REACTIVIDAD: guardamos las filas en `this.tareas` (definido en data()),
+      y Vue repinta la lista automáticamente cuando el array cambia.
+    */
+
+    // Comprobamos que config.js se ha cargado correctamente
+    const configOk =
+      typeof CONFIG !== "undefined" &&
+      CONFIG.SUPABASE_URL &&
+      !CONFIG.SUPABASE_URL.includes("TU-PROYECTO");
+
+    // Creamos el cliente de Supabase solo si hay configuración válida
+    const supabaseClient = configOk
+      ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY)
+      : null;
+
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          tareas: [],       // filas de la tabla `tareas` de Supabase
+          nuevaTarea: "",
+          cargando: false,
+          error: null,
+          configOk: configOk
+        };
+      },
+      mounted() {
+        // Al montar la app, traemos las tareas existentes
+        if (this.configOk) this.getTareas();
+      },
+      methods: {
+        // SELECT: leer todas las tareas ordenadas por fecha de creación
+        async getTareas() {
+          this.cargando = true;
+          this.error = null;
+          const { data, error } = await supabaseClient
+            .from("tareas")      // tabla sobre la que consultamos
+            .select("*")         // columnas a traer ("*" = todas)
+            .order("created_at", { ascending: true });
+          if (error) {
+            this.error = error.message;
+          } else {
+            this.tareas = data; // Vue repinta la lista automáticamente
+          }
+          this.cargando = false;
+        },
+
+        // INSERT: añadir una tarea nueva
+        async addTarea() {
+          const texto = this.nuevaTarea.trim();
+          if (!texto) return;
+          this.error = null;
+          const { data, error } = await supabaseClient
+            .from("tareas")
+            .insert({ texto: texto, completada: false })
+            .select(); // .select() para que Supabase devuelva la fila creada
+          if (error) {
+            this.error = error.message;
+          } else {
+            this.tareas.push(data[0]); // añadimos la fila al array reactivo
+            this.nuevaTarea = "";
+          }
+        },
+
+        // UPDATE: marcar / desmarcar una tarea como completada
+        async toggleTarea(tarea) {
+          this.error = null;
+          const nuevoValor = !tarea.completada;
+          const { error } = await supabaseClient
+            .from("tareas")
+            .update({ completada: nuevoValor })
+            .eq("id", tarea.id); // WHERE id = ...
+          if (error) {
+            this.error = error.message;
+          } else {
+            tarea.completada = nuevoValor; // actualizamos la copia local
+          }
+        },
+
+        // DELETE: borrar una tarea
+        async borrarTarea(id) {
+          this.error = null;
+          const { error } = await supabaseClient
+            .from("tareas")
+            .delete()
+            .eq("id", id);
+          if (error) {
+            this.error = error.message;
+          } else {
+            // Quitamos la tarea del array → Vue repinta la lista
+            this.tareas = this.tareas.filter((t) => t.id !== id);
+          }
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>

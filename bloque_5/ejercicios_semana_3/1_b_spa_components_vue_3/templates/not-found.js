@@ -1,3 +1,5 @@
+// Componente "NotFound" (404): se muestra para cualquier ruta no definida.
+// Observa que dentro del template también podemos usar <router-link>.
 const NotFound = {
     template: `
       <div class="page">

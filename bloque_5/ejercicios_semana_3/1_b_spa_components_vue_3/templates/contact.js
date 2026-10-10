@@ -1,3 +1,4 @@
+// Componente "Contact": se muestra cuando la ruta activa es /contact.
 const Contact = {
     template: `
       <div class="page">

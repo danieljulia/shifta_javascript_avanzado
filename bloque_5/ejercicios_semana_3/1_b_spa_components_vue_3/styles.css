@@ -35,10 +35,11 @@ body {
     color: #2c3e50;
   }
   
-  /* Transition animations */
+  /* Animaciones de la transición (name="fade" en index.html).
+     Ojo: en Vue 3 la clase .fade-enter de Vue 2 se renombró a .fade-enter-from. */
   .fade-enter-active, .fade-leave-active {
     transition: opacity .3s ease;
   }
-  .fade-enter, .fade-leave-to {
+  .fade-enter-from, .fade-leave-to {
     opacity: 0;
   }

@@ -1,26 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vue.js Todo List with MockAPI</title>
-    <!-- Vue 3 CDN -->
+    <!-- Vue 3 desde CDN: expone el objeto global "Vue" -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
+    <!-- #app es el punto de montaje: Vue controla todo lo que hay dentro de este div -->
     <div id="app">
       <h1>Todo List</h1>
 
       <p> Mockapi 
         https://mockapi.io
       </p>
+      <!-- v-model enlaza el input con newTodo; @keyup.enter envía al pulsar Enter -->
       <input v-model="newTodo" placeholder="New todo..." @keyup.enter="addTodo" />
       <button @click="addTodo">Add</button>
 
       <ul>
+        <!-- v-for repite el <li> por cada tarea; :key identifica cada elemento de forma única -->
         <li v-for="todo in todos" :key="todo.id">
           <label>
+            <!-- v-model en un checkbox enlaza con un booleano (todo.completed);
+                 @change llama a updateTodo cada vez que se marca/desmarca -->
             <input type="checkbox" v-model="todo.completed" @change="updateTodo(todo)" />
+            <!-- :style enlaza estilos dinámicamente según el estado de la tarea -->
             <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
               {{ todo.name }}
             </span>
@@ -29,20 +35,25 @@
         </li>
       </ul>
 
+      <!-- v-if renderiza estos párrafos solo cuando loading/error tienen valor -->
       <p v-if="loading">Loading...</p>
       <p v-if="error" style="color:red">{{ error }}</p>
     </div>
 
     <script>
+      // Extraemos createApp del objeto global Vue (cargado por CDN)
       const { createApp } = Vue;
 
+      // createApp crea la aplicación y .mount("#app") la conecta con el div de arriba
       createApp({
+        // data() devuelve el estado REACTIVO: al cambiar estas variables,
+        // Vue actualiza automáticamente el HTML que las usa
         data() {
           return {
             todos: [],
             newTodo: "",
-            loading: false,
-            error: null,
+            loading: false, // true mientras hay una petición en curso
+            error: null,    // mensaje de error visible en pantalla
             // ⚠️ Replace with your own MockAPI URL:
             //la url en https://mockapi.io/ debe ser del tipo 
             //https://xxxxxxxxxx.mockapi.io/api/v1/todos 
@@ -50,22 +61,28 @@
             apiUrl: "https://67c6b62b351c081993fe62eb.mockapi.io/api/v1/todos"
           };
         },
+        // mounted() se ejecuta una vez montada la app: cargamos las tareas iniciales
         mounted() {
           this.fetchTodos();
         },
         methods: {
+          // READ: GET de todas las tareas (fetch devuelve una promesa; async/await la espera)
           async fetchTodos() {
             this.loading = true;
             try {
               const res = await fetch(this.apiUrl);
-              this.todos = await res.json();
+              this.todos = await res.json(); // la reactividad repinta la lista
             } catch (err) {
+              // Si falla la red o la API, mostramos el error en pantalla
               this.error = err.message;
             } finally {
+              // finally se ejecuta siempre, haya éxito o error
               this.loading = false;
             }
           },
+          // CREATE: POST con la nueva tarea en el cuerpo (JSON)
           async addTodo() {
+            // Validación mínima: no enviar tareas vacías
             if (!this.newTodo.trim()) return;
             const todo = { name: this.newTodo, completed: false };
             try {
@@ -74,13 +91,15 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(todo)
               });
+              // MockAPI devuelve el objeto creado (ya con su id asignado)
               const saved = await res.json();
               this.todos.push(saved);
-              this.newTodo = "";
+              this.newTodo = ""; // limpiamos el input (enlace bidireccional de v-model)
             } catch (err) {
               this.error = err.message;
             }
           },
+          // UPDATE: PUT de la tarea completa a /todos/:id
           async updateTodo(todo) {
             try {
               await fetch(`${this.apiUrl}/${todo.id}`, {
@@ -92,9 +111,11 @@
               this.error = err.message;
             }
           },
+          // DELETE: DELETE a /todos/:id y actualización de la lista local
           async deleteTodo(id) {
             try {
               await fetch(`${this.apiUrl}/${id}`, { method: "DELETE" });
+              // Quitamos la tarea del array reactivo → Vue repinta la lista
               this.todos = this.todos.filter(t => t.id !== id);
             } catch (err) {
               this.error = err.message;

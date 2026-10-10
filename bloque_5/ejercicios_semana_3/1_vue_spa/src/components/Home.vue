@@ -1,8 +1,12 @@
+<!-- Vista Home: se muestra cuando la ruta es "/" -->
 <template>
     <div>
       <h2>Home Page</h2>
-      
-      <a href="/project/1">Project 1</a>
+
+      <!-- CORREGIDO: en una SPA usamos router-link en lugar de <a href>.
+           Un <a href="/project/1"> recargaría toda la página y perderíamos
+           la ventaja del enrutado del lado del cliente -->
+      <router-link to="/project/1">Project 1</router-link>
       
       <h3>Posibles mejoras a hacer en este ejemplo</h3>
       <ul>

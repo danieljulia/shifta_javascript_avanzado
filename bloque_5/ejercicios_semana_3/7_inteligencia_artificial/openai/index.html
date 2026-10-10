@@ -1,22 +1,30 @@
 <!--
-Vue 3 (CDN) + OpenAI Chat Completions API sample
-Language: Español
-IMPORTANTE: No pongas tu clave de API en el código del cliente en producción — expondrá la clave. Usa el servidor proxy indicado más abajo.
+Vue 3 (CDN) + OpenAI Chat Completions API — ejemplo de clase
+Idioma: Español
+IMPORTANTE: No pongas tu clave de API en el código del cliente en producción — la expondrías
+a cualquiera que vea el código fuente de la página. Usa el servidor proxy indicado más abajo.
+
+⚠️ SOBRE LA API KEY Y GIT:
+La clave NUNCA debe subirse a un repositorio (ni siquiera privado): cualquiera con acceso
+al historial de git podría robarla y gastar tu saldo. En producción la clave vive SOLO en
+el servidor (variable de entorno, ver el ejemplo de proxy al final del archivo).
+Para pruebas locales se puede definir window.UNSAFE_OPENAI_API_KEY desde la consola del
+navegador (inseguro: solo para desarrollo en tu propia máquina).
 
 Contenido:
- - UI mínima con Vue 3 (CDN)
- - Enviar mensajes al servidor proxy (/api/chat) (recomendado)
- - Opcional: enviar directamente a OpenAI (solo para pruebas locales)
+ - UI mínima con Vue 3 (CDN), usando la Composition API (setup + ref)
+ - Envío de mensajes al servidor proxy (/api/chat) (recomendado)
+ - Opcional: envío directo a OpenAI (solo para pruebas locales)
 
 Servidor proxy recomendado (ver comentarios abajo para Node/Express)
 -->
 
 <!doctype html>
-<html lang="ca">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vue CDN + ChatGPT API sample</title>
+  <title>Vue CDN + ChatGPT API — ejemplo</title>
   <style>
     body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:900px;margin:24px auto;padding:0 16px;color:#111}
     textarea{width:100%;min-height:90px;padding:8px;font-size:14px}
@@ -30,14 +38,17 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
   </style>
 </head>
 <body>
-  <h1>Vue CDN + ChatGPT API — mostra</h1>
+  <h1>Vue CDN + ChatGPT API — muestra</h1>
+  <!-- #app es el punto de montaje: Vue controla todo lo que hay dentro de este div -->
   <div id="app">
     <label>Prompt</label>
-    <textarea v-model="prompt" placeholder="Escriu la teva pregunta aquí..."></textarea>
+    <!-- v-model enlaza el textarea con la variable reactiva "prompt" -->
+    <textarea v-model="prompt" placeholder="Escribe tu pregunta aquí..."></textarea>
 
     <div class="controls">
       <label>
-        Model:
+        Modelo:
+        <!-- v-model también funciona en <select>: enlaza con la variable "model" -->
         <select v-model="model">
           <option>gpt-4o-mini</option>
           <option>gpt-4o</option>
@@ -47,58 +58,73 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
 
       <label>
         Temperatura:
+        <!-- .number es un modificador de v-model: convierte el valor a número -->
         <input type="range" min="0" max="1" step="0.1" v-model.number="temperature" />
         <span>{{ temperature }}</span>
       </label>
 
+      <!-- :disabled enlaza el atributo disabled: el botón se bloquea mientras loading es true -->
       <button @click="send" :disabled="loading">Enviar</button>
 
       <div style="margin-left:auto;text-align:right">
-        <small class="note">Recomanat: utilitza un <strong>proxy servidor</strong> per amagar la clau.</small>
+        <small class="note">Recomendado: utiliza un <strong>proxy en el servidor</strong> para ocultar la clave.</small>
       </div>
     </div>
 
     <div class="messages">
+      <!-- v-for repite un div por cada mensaje; :class aplica clases según el rol -->
       <div v-for="(m,i) in messages" :key="i" class="msg">
         <div :class="m.role==='user'? 'user':'assistant'">{{ m.role }}:</div>
         <div>{{ m.content }}</div>
       </div>
-      <div v-if="loading">Responent...</div>
+      <!-- v-if muestra "Respondiendo..." solo mientras loading es true -->
+      <div v-if="loading">Respondiendo...</div>
     </div>
 
-    <h3>Notes</h3>
+    <h3>Notas</h3>
     <ul>
-      <li>Per a producció: crea un endpoint al teu servidor que afegeixi l'encapçalament <code>Authorization: Bearer &lt;API_KEY&gt;</code> i reenvii la crida a OpenAI.</li>
-      <li>Si vols provar ràpidament sense servidor, defineix <code>window.UNSAFE_OPENAI_API_KEY</code> al navegador (no segur).</li>
+      <li>Para producción: crea un endpoint en tu servidor que añada la cabecera <code>Authorization: Bearer &lt;API_KEY&gt;</code> y reenvíe la llamada a OpenAI.</li>
+      <li>Si quieres probar rápido sin servidor, define <code>window.UNSAFE_OPENAI_API_KEY</code> en la consola del navegador (no seguro; nunca lo escribas en el código ni lo subas a git).</li>
     </ul>
   </div>
 
-  <!-- Vue 3 CDN -->
+  <!-- Vue 3 desde CDN (versión de producción): expone el objeto global "Vue" -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script>
     const { createApp, ref } = Vue;
 
+    // createApp crea la aplicación y .mount('#app') la conecta con el div de arriba.
+    // OJO: este ejemplo usa la COMPOSITION API (setup + ref), la alternativa moderna
+    // a la Options API (data/methods/computed) que usan los demás ejemplos de la semana.
     createApp({
       setup(){
-        const prompt = ref('Digues "Hola" i explica\'t en dues frases.');
+        // ref() crea una variable REACTIVA: cuando cambia su .value,
+        // Vue actualiza automáticamente el HTML que la usa.
+        // Dentro de setup se accede con .value; en la plantilla HTML se usa sin .value.
+        const prompt = ref('Di "Hola" y explícate en dos frases.');
         const model = ref('gpt-3.5-turbo');
         const temperature = ref(0.7);
         const messages = ref([]);
         const loading = ref(false);
 
-        // Aquesta funció crida el teu endpoint proxy /api/chat per tal d'amagar la clau
+        // Esta función llama a tu endpoint proxy /api/chat para ocultar la clave
         async function callProxy(payload){
-          // Exemple: el teu servidor ha d'implementar POST /api/chat que rebi {model,messages,temperature}
+          // Ejemplo: tu servidor debe implementar POST /api/chat que reciba {model,messages,temperature}
           const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
+          // Manejo de errores HTTP: res.ok es false si el servidor responde 4xx/5xx
           if(!res.ok) throw new Error('Proxy error: ' + res.status);
           return res.json();
         }
 
-        // Per a proves locals només: crida directa a OpenAI (INSECUR)
+        // Solo para pruebas locales: llamada directa a OpenAI (INSEGURO).
+        // Aquí es donde iría la API key: se lee de window.UNSAFE_OPENAI_API_KEY,
+        // una variable global que defines a mano en la consola del navegador.
+        // NUNCA la escribas directamente en este archivo: quedaría en el código fuente
+        // y, si lo subes a git, cualquiera podría robarte la clave.
         async function callOpenAIInsecure(payload){
           const apiKey = window.UNSAFE_OPENAI_API_KEY;
           
@@ -113,6 +139,7 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
             body: JSON.stringify(payload)
           });
           if(!res.ok){
+            // Leemos el cuerpo del error para mostrar el mensaje de OpenAI
             const txt = await res.text();
             throw new Error('OpenAI error: ' + res.status + ' ' + txt);
           }
@@ -122,7 +149,7 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
         async function send(){
           loading.value = true;
           const userMsg = { role: 'user', content: prompt.value };
-          messages.value.push(userMsg);
+          messages.value.push(userMsg); // push sobre el array reactivo → Vue repinta
 
           const payload = {
             model: model.value,
@@ -132,17 +159,17 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
           };
 
           try{
-            // Intentem usar el proxy primer
+            // Intentamos usar el proxy primero
             let data;
             try{
               data = await callProxy(payload);
             }catch(proxyErr){
-              // Si el proxy no existeix, intentem la crida insegura (només per a desenvolupament)
+              // Si el proxy no existe, intentamos la llamada insegura (solo para desarrollo)
               console.warn('Proxy failed, falling back to insecure direct call:', proxyErr);
               data = await callOpenAIInsecure(payload);
             }
 
-            // Interpretem la resposta segons l'API Chat Completions (v1)
+            // Interpretamos la respuesta según la API Chat Completions (v1)
             const assistantContent = data.choices && data.choices[0] && data.choices[0].message
               ? data.choices[0].message.content
               : (data.error && data.error.message) || JSON.stringify(data);
@@ -150,12 +177,15 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
             messages.value.push({ role: 'assistant', content: assistantContent });
 
           }catch(err){
+            // Cualquier fallo (red, clave ausente, error de OpenAI) se muestra como mensaje
             messages.value.push({ role: 'assistant', content: 'Error: ' + err.message });
           }finally{
+            // finally se ejecuta siempre: liberamos el botón de enviar
             loading.value = false;
           }
         }
 
+        // Todo lo que devuelve setup() queda disponible en la plantilla HTML
         return { prompt, model, temperature, messages, send, loading };
       }
     }).mount('#app');
@@ -163,19 +193,20 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
 
   <!--
   ------------------
-  Exemple de servidor proxy (Node.js + Express)
-  Fitxer: server.js
+  Ejemplo de servidor proxy (Node.js + Express)
+  Archivo: server.js
 
-  // Instal·la: npm i express node-fetch
+  // Instala: npm i express node-fetch
   const express = require('express');
   const fetch = require('node-fetch');
   const app = express();
   app.use(express.json());
 
-  // Llegeix la clau des d'una variable d'entorn
+  // Lee la clave desde una variable de entorno: así nunca está en el código
+  // ni en el repositorio de git
   const OPENAI_KEY = process.env.OPENAI_API_KEY;
   if(!OPENAI_KEY){
-    console.error('Define OPENAI_API_KEY a les variables d\'entorn');
+    console.error('Define OPENAI_API_KEY en las variables de entorno');
     process.exit(1);
   }
 
