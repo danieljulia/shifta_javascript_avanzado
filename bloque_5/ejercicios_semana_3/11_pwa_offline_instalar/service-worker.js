@@ -1,11 +1,14 @@
-const CACHE_NAME = "pwa-offline-instalar-v1";
+const CACHE_NAME = "pwa-offline-instalar-v2";
 
 // Archivos que se guardan en caché al instalar el service worker.
-// ¡Importante! Aquí tiene que estar también la página offline.
+// ¡Importante! Aquí tienen que estar también la página offline y su CSS.
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
+  "./styles.css",
+  "./app.js",
   "./offline.html",
+  "./offline.css",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
