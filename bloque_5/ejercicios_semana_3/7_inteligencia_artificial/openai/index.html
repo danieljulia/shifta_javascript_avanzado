@@ -17,6 +17,11 @@ Contenido:
  - Opcional: envío directo a OpenAI (solo para pruebas locales)
 
 Servidor proxy recomendado (ver comentarios abajo para Node/Express)
+
+NOTA sobre modelos (actualizado 2026): "gpt-3.5-turbo" está descatalogado/en vías de
+retirada. Usa modelos vigentes como gpt-6-luna (barato, para tareas sencillas),
+gpt-6.1-sol (equilibrio precio/calidad) o gpt-6-astra (máxima capacidad). Consulta
+la lista actualizada en https://platform.openai.com/docs/models
 -->
 
 <!doctype html>
@@ -50,9 +55,9 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
         Modelo:
         <!-- v-model también funciona en <select>: enlaza con la variable "model" -->
         <select v-model="model">
-          <option>gpt-4o-mini</option>
-          <option>gpt-4o</option>
-          <option>gpt-3.5-turbo</option>
+          <option>gpt-6-luna</option>
+          <option>gpt-6.1-sol</option>
+          <option>gpt-6-astra</option>
         </select>
       </label>
 
@@ -92,7 +97,7 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script>
     const { createApp, ref } = Vue;
-
+    
     // createApp crea la aplicación y .mount('#app') la conecta con el div de arriba.
     // OJO: este ejemplo usa la COMPOSITION API (setup + ref), la alternativa moderna
     // a la Options API (data/methods/computed) que usan los demás ejemplos de la semana.
@@ -102,7 +107,7 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
         // Vue actualiza automáticamente el HTML que la usa.
         // Dentro de setup se accede con .value; en la plantilla HTML se usa sin .value.
         const prompt = ref('Di "Hola" y explícate en dos frases.');
-        const model = ref('gpt-3.5-turbo');
+        const model = ref('gpt-6-luna');
         const temperature = ref(0.7);
         const messages = ref([]);
         const loading = ref(false);
@@ -196,9 +201,9 @@ Servidor proxy recomendado (ver comentarios abajo para Node/Express)
   Ejemplo de servidor proxy (Node.js + Express)
   Archivo: server.js
 
-  // Instala: npm i express node-fetch
+  // Instala: npm i express
+  // Node.js 18+ incluye fetch de forma nativa: no hace falta node-fetch.
   const express = require('express');
-  const fetch = require('node-fetch');
   const app = express();
   app.use(express.json());
 

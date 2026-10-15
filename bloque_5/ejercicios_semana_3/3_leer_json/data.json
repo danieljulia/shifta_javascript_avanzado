@@ -2,6 +2,8 @@
     "usuarios": [
       { "id": 1, "nombre": "Ana", "email": "ana@example.com" },
       { "id": 2, "nombre": "Luis", "email": "luis@example.com" },
-      { "id": 3, "nombre": "Carla", "email": "carla@example.com" }
+      { "id": 3, "nombre": "Carla", "email": "carla@example.com" },
+      { "id": 3, "nombre": "Jose", "email": "jose@example.com" }
+
     ]
   }

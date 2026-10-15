@@ -13,5 +13,5 @@ import Footer from './components/Footer.vue';
        de la ruta actual (Home, About, Project...) -->
   <router-view />
  
-  <Footer></Footer>
+  <Footer/>
 </template>
