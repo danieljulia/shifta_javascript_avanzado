@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo: API de la cámara con Vue 3</title>
+
+  <!-- Vue 3 por CDN: la versión "global" expone el objeto Vue en window -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .tarjeta {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 { font-size: 1.3rem; margin-top: 0; }
+    video, canvas, img {
+      width: 100%;
+      border-radius: 8px;
+      background: #000;
+      margin-top: 12px;
+    }
+    .botones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #42b883;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    button:hover { background: #369f6e; }
+    button.secundario { background: #64748b; }
+    button:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .error {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+    .nota { color: #64748b; font-size: 0.85rem; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- Punto de montaje: Vue controla todo lo que hay dentro de #app -->
+  <div id="app" class="tarjeta">
+    <h1>📷 API de la cámara (getUserMedia)</h1>
+
+    <div class="botones">
+      <!-- @click equivale a v-on:click; :disabled es un atributo dinámico -->
+      <button @click="encenderCamara" :disabled="camaraActiva">Encender cámara</button>
+      <button @click="hacerFoto" :disabled="!camaraActiva">Hacer foto</button>
+      <button @click="cambiarCamara" :disabled="!camaraActiva" class="secundario">Cámara frontal/trasera</button>
+      <button @click="apagarCamara" :disabled="!camaraActiva" class="secundario">Apagar</button>
+    </div>
+
+    <!-- El vídeo en directo. ref="video" nos da acceso al elemento desde el código (this.$refs.video).
+         autoplay y playsinline son necesarios para que funcione bien en móviles (iOS). -->
+    <video ref="video" autoplay playsinline></video>
+
+    <!-- El canvas no se muestra: lo usamos solo para "copiar" un fotograma del vídeo -->
+    <canvas ref="canvas" v-show="false"></canvas>
+
+    <!-- v-if: la foto solo aparece cuando existe -->
+    <div v-if="foto">
+      <h2>Foto capturada</h2>
+      <img :src="foto" alt="Foto capturada con la cámara">
+      <div class="botones">
+        <a :href="foto" download="foto.png"><button>Descargar foto</button></a>
+        <button @click="foto = null" class="secundario">Descartar</button>
+      </div>
+    </div>
+
+    <!-- Mensaje de error (permiso denegado, sin cámara, etc.) -->
+    <p v-if="error" class="error">{{ error }}</p>
+
+    <p class="nota">
+      La cámara solo funciona en páginas servidas por HTTPS o en localhost.
+      Prueba con: <code>npx serve .</code>
+    </p>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      // data(): estado reactivo. Cuando una propiedad cambia, la vista se actualiza sola.
+      data() {
+        return {
+          camaraActiva: false,
+          foto: null,        // foto capturada en formato data URL (base64)
+          error: null,
+          stream: null,      // el MediaStream de la cámara (no reactivo de verdad, ver apagarCamara)
+          usarFrontal: true  // facingMode: "user" (frontal) o "environment" (trasera)
+        };
+      },
+
+      methods: {
+        async encenderCamara() {
+          this.error = null;
+
+          // getUserMedia es la API del navegador para acceder a cámara y micrófono.
+          // Vive en navigator.mediaDevices y devuelve una Promise con un MediaStream.
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            this.error = "Este navegador no soporta el acceso a la cámara.";
+            return;
+          }
+
+          try {
+            // Pedimos solo vídeo. facingMode indica la cámara preferida:
+            // "user" = frontal, "environment" = trasera (en móviles).
+            this.stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: this.usarFrontal ? "user" : "environment" },
+              audio: false
+            });
+
+            // Conectamos el stream al elemento <video> para ver la imagen en directo.
+            this.$refs.video.srcObject = this.stream;
+            this.camaraActiva = true;
+          } catch (err) {
+            // Errores típicos: NotAllowedError (permiso denegado),
+            // NotFoundError (no hay cámara), NotReadableError (cámara ocupada).
+            this.error = "No se pudo acceder a la cámara: " + err.name + " (" + err.message + ")";
+          }
+        },
+
+        hacerFoto() {
+          const video = this.$refs.video;
+          const canvas = this.$refs.canvas;
+
+          // Ajustamos el canvas al tamaño real del vídeo
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+
+          // Dibujamos el fotograma actual del vídeo en el canvas (como un "screenshot")
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          // toDataURL convierte el canvas en una imagen PNG codificada en base64,
+          // que podemos mostrar en un <img> o descargar directamente.
+          this.foto = canvas.toDataURL("image/png");
+        },
+
+        async cambiarCamara() {
+          // Alternamos entre frontal y trasera: apagamos y volvemos a encender
+          this.usarFrontal = !this.usarFrontal;
+          this.apagarCamara();
+          await this.encenderCamara();
+        },
+
+        apagarCamara() {
+          // Importante: hay que parar TODOS los tracks del stream,
+          // si no la cámara (y su luz indicadora) se quedan encendidas.
+          if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+          }
+          this.$refs.video.srcObject = null;
+          this.camaraActiva = false;
+        }
+      },
+
+      // Hook del ciclo de vida: antes de que el componente se destruya,
+      // liberamos la cámara (por ejemplo al navegar a otra ruta en una SPA).
+      beforeUnmount() {
+        this.apagarCamara();
+      }
+    });
+
+    // Montamos la aplicación sobre el elemento #app
+    app.mount("#app");
+  </script>
+</body>
+</html>

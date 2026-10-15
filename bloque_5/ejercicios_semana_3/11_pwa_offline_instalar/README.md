@@ -8,9 +8,10 @@ Sin frameworks, sin build: solo HTML, CSS y un poco de JavaScript comentado.
 | Feature | Dónde está |
 |---|---|
 | Manifest con iconos y colores | `manifest.json` |
-| Botón "Instalar app" | `index.html` (evento `beforeinstallprompt`) |
-| Aviso visible sin conexión | `index.html` (eventos `online` / `offline`) |
-| Página offline personalizada | `offline.html` |
+| Botón "Instalar app" | `app.js` (evento `beforeinstallprompt`) |
+| Aviso visible sin conexión | `app.js` (eventos `online` / `offline`) |
+| Estilos de la página principal | `styles.css` |
+| Página offline personalizada | `offline.html` + `offline.css` |
 | Service worker con caché | `service-worker.js` |
 
 ## Cómo probarlo

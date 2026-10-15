@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo: Lectura de códigos de barras y QR con Vue 3</title>
+
+  <!-- Vue 3 por CDN: la versión "global" expone el objeto Vue en window -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <!-- ZXing: librería de lectura de códigos de barras y QR.
+       La versión UMD expone el objeto global ZXing.
+       (Los navegadores empiezan a incluir la API nativa BarcodeDetector,
+       pero su soporte todavía es limitado, así que usamos una librería.) -->
+  <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .tarjeta {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 { font-size: 1.3rem; margin-top: 0; }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      background: #000;
+      margin-top: 12px;
+    }
+    .botones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #42b883;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    button:hover { background: #369f6e; }
+    button.secundario { background: #64748b; }
+    button:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .resultado {
+      background: #dcfce7;
+      color: #166534;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 12px;
+      word-break: break-all;
+    }
+    .error {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 4px; word-break: break-all; }
+    .formato { color: #64748b; font-size: 0.85rem; }
+    .nota { color: #64748b; font-size: 0.85rem; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- Punto de montaje: Vue controla todo lo que hay dentro de #app -->
+  <div id="app" class="tarjeta">
+    <h1>🔍 Lectura de códigos de barras y QR</h1>
+
+    <div class="botones">
+      <button @click="empezarEscaneo" :disabled="escaneando">Empezar escaneo</button>
+      <button @click="pararEscaneo" :disabled="!escaneando" class="secundario">Parar</button>
+      <button @click="historial = []" :disabled="historial.length === 0" class="secundario">Limpiar historial</button>
+    </div>
+
+    <!-- Vídeo en directo de la cámara: ZXing analiza los fotogramas de este elemento.
+         ref="video" nos da acceso al elemento desde el código (this.$refs.video). -->
+    <video ref="video" muted playsinline></video>
+
+    <!-- Último código detectado (v-if: solo se muestra cuando existe) -->
+    <div v-if="ultimoCodigo" class="resultado">
+      <strong>Detectado:</strong> {{ ultimoCodigo }}
+    </div>
+
+    <!-- Mensaje de error (permiso denegado, sin cámara, etc.) -->
+    <p v-if="error" class="error">{{ error }}</p>
+
+    <!-- Historial de lecturas: v-for con :key para que Vue actualice la lista eficientemente -->
+    <div v-if="historial.length > 0">
+      <h2>Historial ({{ historial.length }})</h2>
+      <ul>
+        <li v-for="(item, index) in historial" :key="index">
+          {{ item.texto }} <span class="formato">({{ item.formato }})</span>
+        </li>
+      </ul>
+    </div>
+
+    <p class="nota">
+      La cámara solo funciona en páginas servidas por HTTPS o en localhost.
+      Prueba con: <code>npx serve .</code>
+    </p>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      // data(): estado reactivo. Cuando una propiedad cambia, la vista se actualiza sola.
+      data() {
+        return {
+          escaneando: false,
+          ultimoCodigo: null,
+          historial: [],       // lista de { texto, formato }
+          error: null,
+          lector: null         // instancia de ZXing (BrowserMultiFormatReader)
+        };
+      },
+
+      methods: {
+        async empezarEscaneo() {
+          this.error = null;
+
+          try {
+            // BrowserMultiFormatReader detecta QR, EAN-13, Code 128, etc.
+            this.lector = new ZXing.BrowserMultiFormatReader();
+
+            // decodeFromVideoDevice(deviceId, video, callback):
+            //   - deviceId null -> usa la cámara por defecto (trasera en móviles)
+            //   - video -> elemento <video> donde mostrar la imagen
+            //   - callback -> se ejecuta cada vez que analiza un fotograma:
+            //       si hay resultado, `result` contiene el código detectado
+            await this.lector.decodeFromVideoDevice(null, this.$refs.video, (result, err) => {
+              if (result) {
+                const texto = result.getText();
+
+                // Evitamos repetir la misma lectura una y otra vez:
+                // al ser un escaneo continuo, el mismo código se detecta muchas veces
+                if (texto !== this.ultimoCodigo) {
+                  this.ultimoCodigo = texto;
+                  // unshift añade al principio del array; Vue repinta la lista solo
+                  this.historial.unshift({
+                    texto: texto,
+                    formato: ZXing.BarcodeFormat[result.getBarcodeFormat()]
+                  });
+                }
+              }
+              // `err` llega en cada fotograma sin código (NotFoundException):
+              // es lo normal mientras apuntamos, así que NO lo tratamos como error.
+            });
+
+            this.escaneando = true;
+          } catch (err) {
+            // Errores típicos al abrir la cámara: NotAllowedError (permiso denegado),
+            // NotFoundError (no hay cámara), NotReadableError (cámara ocupada).
+            this.error = "No se pudo acceder a la cámara: " + err.name + " (" + err.message + ")";
+          }
+        },
+
+        pararEscaneo() {
+          // reset() detiene el análisis y libera la cámara (para todos los tracks)
+          if (this.lector) {
+            this.lector.reset();
+            this.lector = null;
+          }
+          this.escaneando = false;
+        }
+      },
+
+      // Hook del ciclo de vida: al destruir el componente, liberamos la cámara
+      beforeUnmount() {
+        this.pararEscaneo();
+      }
+    });
+
+    // Montamos la aplicación sobre el elemento #app
+    app.mount("#app");
+  </script>
+</body>
+</html>
