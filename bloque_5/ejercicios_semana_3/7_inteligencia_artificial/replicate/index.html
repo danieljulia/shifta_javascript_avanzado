@@ -1,51 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Replicate API Image</title>
+    <title>Generador de imágenes con Replicate</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        form {
+            display: flex;
+            gap: 0.5rem;
+        }
+        input {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 1rem;
+            color: #666;
+        }
+        #generatedImage {
+            margin-top: 1rem;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <button onclick="fetchImage()">Generate Image</button>
-    <img id="generatedImage" src="" alt="Generated Image" style="display:none; max-width:100%;">
-    
+    <h1>Generador de imágenes</h1>
+    <p>Modelo: <code>black-forest-labs/flux-schnell</code> (Replicate)</p>
+
+    <form id="promptForm">
+        <input
+            id="promptInput"
+            type="text"
+            value='matcha cake spelling out the words "SHIFTA", tasty, food photography, dynamic shot'
+            placeholder="Describe la imagen que quieres generar..."
+            required
+        >
+        <button type="submit">Generar</button>
+    </form>
+
+    <p id="status"></p>
+    <img id="generatedImage" alt="Imagen generada" style="display:none;">
+
     <script>
-        /**
-         * no funciona por un problema de CORS 
-         * Cross-Origin Resource Sharing (CORS) es un mecanismo que utiliza cabeceras HTTP adicionales para permitir que un user agent obtenga permiso para acceder a recursos seleccionados desde un servidor, en un origen distinto (dominio) al que pertenece.
-         * pero se puede ejecutar el script con node
-         * node script.js
-         * */
+        const form = document.getElementById('promptForm');
+        const status = document.getElementById('status');
+        const img = document.getElementById('generatedImage');
 
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const prompt = document.getElementById('promptInput').value;
 
-        async function fetchImage() {
-            const apiKey = ''; // Substitueix amb la teva clau d'API
-            const apiUrl = 'https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions';
-            
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'wait'
-                },
-                body: JSON.stringify({
-                    input: {
-                        prompt: "black forest gateau cake spelling out the words 'SHIFTA', tasty, food photography, dynamic shot"
-                    }
-                })
-            });
-            
-            const data = await response.json();
-            if (data && data.output) {
-                const imageUrl = data.output;
-                const imgElement = document.getElementById('generatedImage');
-                imgElement.src = imageUrl;
-                imgElement.style.display = 'block';
-            } else {
-                alert('Error generating image.');
+            status.textContent = 'Generando imagen... (puede tardar unos segundos)';
+            img.style.display = 'none';
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                img.src = data.imageUrl;
+                img.style.display = 'block';
+                status.textContent = '';
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
             }
-        }
+        });
     </script>
 </body>
 </html>
