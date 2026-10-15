@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Primera PWA</title>
+
+  <!-- PWA: manifest y color del navegador -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#667eea" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      margin: 0;
+      background: #f5f6fa;
+      color: #2d2d44;
+      text-align: center;
+    }
+    main { padding: 60px 20px; max-width: 480px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    p { color: #6b6b85; }
+
+    /* ---- Aviso de conexión: fijo arriba, oculto por defecto ---- */
+    #aviso-offline {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #e74c3c;
+      color: #fff;
+      padding: 12px;
+      font-weight: 600;
+      display: none; /* se muestra con JavaScript */
+    }
+
+    /* ---- Botón de instalar: oculto hasta que el navegador lo permite ---- */
+    #btn-instalar {
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none; /* se muestra con JavaScript */
+    }
+    #btn-instalar:hover { background: #5568d3; }
+
+    .tarjeta {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Aviso visible cuando no hay conexión -->
+  <div id="aviso-offline">📡 Estás sin conexión — la app sigue funcionando</div>
+
+  <main>
+    <h1>Mi Primera PWA</h1>
+    <p>Esta página se puede instalar como app y funciona sin internet.</p>
+
+    <!-- Botón para instalar la app (lo activa el navegador) -->
+    <button id="btn-instalar">⬇ Instalar app</button>
+
+    <div class="tarjeta">
+      <h2>¿Cómo probarlo?</h2>
+      <p>1. Instala la app con el botón de arriba.</p>
+      <p>2. Desconecta el wifi: verás el aviso rojo.</p>
+      <p>3. Recarga sin conexión: aparecerá la página offline personalizada.</p>
+    </div>
+  </main>
+
+  <script>
+    // ---------- 1. Registrar el service worker ----------
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.error("Error al registrar el SW", err));
+    }
+
+    // ---------- 2. Aviso de conexión online / offline ----------
+    const aviso = document.getElementById("aviso-offline");
+
+    function actualizarAviso() {
+      // navigator.onLine es true si hay conexión
+      aviso.style.display = navigator.onLine ? "none" : "block";
+    }
+
+    // Los eventos "online" y "offline" saltan al cambiar la conexión
+    window.addEventListener("online", actualizarAviso);
+    window.addEventListener("offline", actualizarAviso);
+    actualizarAviso(); // comprobar al cargar la página
+
+    // ---------- 3. Botón de instalar la app ----------
+    const btnInstalar = document.getElementById("btn-instalar");
+    let eventoInstalar = null;
+
+    // El navegador lanza "beforeinstallprompt" cuando la PWA es instalable.
+    // Guardamos el evento para lanzarlo nosotros al pulsar el botón.
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();       // evitar el banner automático del navegador
+      eventoInstalar = event;
+      btnInstalar.style.display = "inline-block";
+    });
+
+    btnInstalar.addEventListener("click", async () => {
+      if (!eventoInstalar) return;
+      eventoInstalar.prompt();                       // mostrar el diálogo de instalación
+      const { outcome } = await eventoInstalar.userChoice;
+      console.log("El usuario eligió:", outcome);    // "accepted" o "dismissed"
+      eventoInstalar = null;
+      btnInstalar.style.display = "none";
+    });
+
+    // Cuando la app ya está instalada, ocultamos el botón
+    window.addEventListener("appinstalled", () => {
+      btnInstalar.style.display = "none";
+      console.log("¡App instalada!");
+    });
+  </script>
+</body>
+</html>
