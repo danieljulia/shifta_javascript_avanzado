@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>07 · p5.js — organismo generativo reactivo</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+</head>
+<body>
+<script>
+/* ============================================================
+   07 · P5.JS — ORGANISMO GENERATIVO REACTIVO
+   La práctica de la sesión: 150 agentes siguen un campo de
+   ruido Perlin y la paleta reacciona a mouseX.
+   Mueve el ratón horizontalmente para cambiar el color.
+   ============================================================ */
+
+const NUM_AGENTES = 150;
+
+class Agente {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = random(width);
+    this.y = random(height);
+    this.vel = random(1, 2.5);      // cada agente va a su ritmo
+    this.vida = random(120, 300);   // renace al agotarse
+  }
+  paso() {
+    // 1 · ÁNGULO DEL RUIDO: noise() en p5 toma coords y devuelve 0..1.
+    //     Lo escalamos a TWO_PI * 2 para giros más expresivos.
+    const angulo = noise(this.x * 0.004, this.y * 0.004) * TWO_PI * 2;
+
+    // 2 · MOVIMIENTO
+    const px = this.x, py = this.y;
+    this.x += cos(angulo) * this.vel;
+    this.y += sin(angulo) * this.vel;
+
+    // 3 · COLOR REACTIVO: mouseX (0..width) se mapea a rango de matiz
+    //     map(valor, inMin, inMax, outMin, outMax) — cambio de regla,
+    //     misma sintaxis que en cualquier otro sketch.
+    const matiz = map(mouseX, 0, width, 0, 60);   // bermellón → ámbar
+    stroke(matiz, 85, 60, 0.35);
+    strokeWeight(1);
+    line(px, py, this.x, this.y);
+
+    // 4 · VIDA
+    this.vida--;
+    if (this.vida < 0 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+      this.reset();
+    }
+  }
+}
+
+let agentes = [];
+
+function setup() {
+  createCanvas(800, 600);
+  // fondo con alfa: las estelas persisten y crean textura
+  background(20);
+  agentes = Array.from({ length: NUM_AGENTES }, () => new Agente());
+}
+
+function draw() {
+  noStroke();
+  fill(20, 12);        // rect de fondo con alfa → estelas
+  rect(0, 0, width, height);
+
+  for (const a of agentes) a.paso();
+}
+</script>
+</body>
+</html>

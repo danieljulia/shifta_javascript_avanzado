@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>04 · Ruido Perlin — azar bonito</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; background: #141417; }
+</style>
+</head>
+<body>
+<canvas id="lienzo" width="800" height="600"></canvas>
+<script>
+/* ============================================================
+   04 · RUIDO PERLIN vs ALEATORIO BRUSCO
+   Misma "caminata" dos veces: una con random() (saltos secos)
+   y otra con ruido (variación orgánica continua).
+   Ken Perlin lo ideó en 1983 para Tron: el azar bonito.
+   ============================================================ */
+
+const canvas = document.getElementById("lienzo");
+const ctx = canvas.getContext("2d");
+
+/* --- ruido de valor 2D (misma idea que en el flow field) --- */
+function hash(x, y) {
+  const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return n - Math.floor(n);
+}
+function ruido(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y);
+  const xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash(xi, yi),     b = hash(xi + 1, yi);
+  const c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+
+// Dos caminantes: mismo punto de salida, distinta materia
+const caminanteRandom = { x: 0, y: 0.75 * canvas.height };
+const caminanteRuido  = { x: 0, y: 0.25 * canvas.height };
+let t = 0;                       // "tiempo" del ruido: avanza en horizontal
+
+function dibujar() {
+  t += 0.004;
+
+  /* CAMINANTE 1 — random()
+     Cada frame tira los dados: la línea tiembla de forma brusca. */
+  caminanteRandom.x += 1.5;
+  caminanteRandom.y += (Math.random() - 0.5) * 12;
+  ctx.fillStyle = "#8A84C7";     // violeta: camino brusco
+  ctx.fillRect(caminanteRandom.x, caminanteRandom.y, 1.5, 1.5);
+
+  /* CAMINANTE 2 — ruido(x, t)
+     El ruido devuelve valores CERCANOS en puntos CERCANOS:
+     la línea fluye como si tuviera masa. */
+  caminanteRuido.x += 1.5;
+  // muestreamos el ruido en (tiempo, 0): una "señal" 1D continua
+  const valor = ruido(t * 40, 0) - 0.5;          // -0.5 .. 0.5
+  caminanteRuido.y += valor * 6;
+  ctx.fillStyle = "#FF5A3C";     // bermellón: camino orgánico
+  ctx.fillRect(caminanteRuido.x, caminanteRuido.y, 1.5, 1.5);
+
+  // etiquetas
+  ctx.font = "16px system-ui, sans-serif";
+  ctx.fillStyle = "#A7A29A";
+  ctx.fillText("random() — saltos secos", 20, 0.75 * canvas.height + 34);
+  ctx.fillText("ruido() — variación orgánica", 20, 0.25 * canvas.height - 18);
+
+  // cuando el caminante llega al borde, limpiamos y empezamos de nuevo
+  if (caminanteRuido.x > canvas.width) {
+    caminanteRuido.x = 0;
+    caminanteRandom.x = 0;
+    ctx.fillStyle = "#141417";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  requestAnimationFrame(dibujar);
+}
+ctx.fillStyle = "#141417";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+requestAnimationFrame(dibujar);
+</script>
+</body>
+</html>

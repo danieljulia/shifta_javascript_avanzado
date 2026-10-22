@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>09 · D3.js — datos como pigmento</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  svg { border: 1px solid #33333b; }
+  text { fill: #A7A29A; font-family: system-ui, sans-serif; font-size: 13px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+<svg id="lienzo" width="800" height="500"></svg>
+<script>
+/* ============================================================
+   09 · D3.JS — DATOS COMO PIGMENTO
+   Data-Driven Documents: unimos un array de datos a círculos
+   SVG y dejamos que el dato decida posición, tamaño y color.
+   Haz clic para muestrear un nuevo "poblado" de datos.
+   ============================================================ */
+
+const svg = d3.select("#lienzo");
+const ANCHO = 800, ALTO = 500;
+
+// genera datos de ejemplo: 40 valores aleatorios 0..100
+function nuevosDatos() {
+  return Array.from({ length: 40 }, () => Math.random() * 100);
+}
+
+function pintar(datos) {
+  /* ---- EL JOIN: data() empareja datos con elementos ----
+     enter()  → datos sin elemento → creamos círculos
+     update() → parejas existentes → transición a su nuevo estado
+     exit()   → elementos sin dato → los retiramos            */
+
+  const circulos = svg.selectAll("circle").data(datos);
+
+  // ENTER: nacen los círculos pequeños y transparentes
+  const enter = circulos.enter()
+    .append("circle")
+    .attr("cx", ANCHO / 2)
+    .attr("cy", ALTO / 2)
+    .attr("r", 0)
+    .attr("fill-opacity", 0);
+
+  // UPDATE (enter incluido): cada dato se convierte en forma.
+  // scaleLinear: convierte el rango del dato (0..100) en
+  // coordenadas del lienzo — la forma ES función del dato.
+  const escalaX = d3.scaleLinear().domain([0, 100]).range([40, ANCHO - 40]);
+  const escalaY = d3.scaleLinear().domain([0, 100]).range([ALTO - 40, 40]);
+
+  enter.merge(circulos)
+    .transition().duration(900).ease(d3.easeCubicOut)
+    .attr("cx", d => escalaX(d))                        // posición X = dato
+    .attr("cy", d => escalaY(100 - d))                  // posición Y = espejo
+    .attr("r",  d => 4 + d / 4)                         // radio = dato
+    .attr("fill", d => d3.hsl(16 + d * 0.4, 0.85, 0.55)) // color = dato
+    .attr("fill-opacity", 0.85);
+
+  // EXIT: los que sobran se despiden
+  circulos.exit().transition().duration(500).attr("r", 0).remove();
+}
+
+pintar(nuevosDatos());
+svg.on("click", () => pintar(nuevosDatos()));
+
+svg.append("text").attr("x", 40).attr("y", 30)
+  .text("09 · D3.js — haz clic para muestrear nuevos datos");
+</script>
+</body>
+</html>

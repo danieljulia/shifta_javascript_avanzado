@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>11 · Shaders — un píxel, una fórmula</title>
+<style>
+  body { margin: 0; background: #141417; overflow: hidden; }
+  canvas { display: block; }
+  p {
+    position: fixed; left: 16px; bottom: 12px; margin: 0;
+    color: #A7A29A; font: 13px system-ui, sans-serif;
+  }
+</style>
+</head>
+<body>
+<p>11 · Fragment shader mínimo — WebGL crudo, sin librerías</p>
+<canvas id="lienzo"></canvas>
+<script>
+/* ============================================================
+   11 · SHADERS — WEBGL CRUDO
+   Un fragment shader es un miniprograma GLSL que corre en la
+   GPU para CADA píxel: aquí el color sale de la posición del
+   píxel + el tiempo. No hay geometría, textura ni librerías:
+   un cuadradito que llena la pantalla y una fórmula.
+   ============================================================ */
+
+const lienzo = document.getElementById("lienzo");
+const gl = lienzo.getContext("webgl");
+if (!gl) alert("Este navegador no soporta WebGL");
+
+/* ---------- 1 · Los dos shaders (código GLSL) ---------- */
+
+// Vertex shader: coloca los vértices (un rectángulo de 2 triángulos).
+// gl_Position es la posición final del vértice en pantalla.
+const VERTEX = `
+  attribute vec2 a_posicion;
+  void main() {
+    gl_Position = vec4(a_posicion, 0.0, 1.0);
+  }
+`;
+
+// Fragment shader: decide el color de CADA píxel.
+// gl_FragCoord = posición del píxel en pantalla; u_time = segundos.
+const FRAGMENT = `
+  precision mediump float;
+  uniform vec2  u_resolucion;
+  uniform float u_tiempo;
+  void main() {
+    // st: posición del píxel normalizada 0..1
+    vec2 st = gl_FragCoord.xy / u_resolucion;
+    // el color ES la posición + una onda temporal → gradiente vivo
+    vec3 color = vec3(st.x, st.y, abs(sin(u_tiempo + st.x * 4.0)));
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+
+/* ---------- 2 · Compilar y enlazar (siempre igual) ---------- */
+function compilar(tipo, fuente) {
+  const shader = gl.createShader(tipo);
+  gl.shaderSource(shader, fuente);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(shader));   // ¡aquí lloran los shaders!
+  }
+  return shader;
+}
+const programa = gl.createProgram();
+gl.attachShader(programa, compilar(gl.VERTEX_SHADER, VERTEX));
+gl.attachShader(programa, compilar(gl.FRAGMENT_SHADER, FRAGMENT));
+gl.linkProgram(programa);
+gl.useProgram(programa);
+
+/* ---------- 3 · El rectángulo que llena la pantalla ---------- */
+const vertices = new Float32Array([
+  -1, -1,   1, -1,  -1,  1,      // triángulo 1
+  -1,  1,   1, -1,   1,  1,      // triángulo 2
+]);
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(programa, "a_posicion");
+gl.enableVertexAttribArray(aPos);
+gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+/* ---------- 4 · Uniforms: variables que viajan JS → GPU ---------- */
+const uResolucion = gl.getUniformLocation(programa, "u_resolucion");
+const uTiempo = gl.getUniformLocation(programa, "u_tiempo");
+
+function redimensionar() {
+  lienzo.width = innerWidth;
+  lienzo.height = innerHeight;
+  gl.viewport(0, 0, lienzo.width, lienzo.height);
+}
+addEventListener("resize", redimensionar);
+redimensionar();
+
+/* ---------- 5 · Bucle: solo enviamos el tiempo ---------- */
+function animar(tiempoMs) {
+  gl.uniform2f(uResolucion, lienzo.width, lienzo.height);
+  gl.uniform1f(uTiempo, tiempoMs * 0.001);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);   // pinta los 2 triángulos
+  requestAnimationFrame(animar);
+}
+requestAnimationFrame(animar);
+</script>
+</body>
+</html>

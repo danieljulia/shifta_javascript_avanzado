@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>08 · SVG generativo</title>
+<style>
+  body {
+    margin: 0; background: #141417; min-height: 100vh;
+    display: grid; place-items: center; color: #A7A29A;
+    font-family: system-ui, sans-serif;
+  }
+  /* En SVG cada figura es un nodo del DOM: se puede estilar
+     y animar con CSS como cualquier otro elemento. */
+  circle { transition: r 0.6s ease, fill 0.6s ease; }
+</style>
+</head>
+<body>
+<div>
+  <svg id="escena" width="640" height="560" xmlns="http://www.w3.org/2000/svg"></svg>
+  <p style="text-align:center">Haz clic para regenerar la composición</p>
+</div>
+<script>
+/* ============================================================
+   08 · SVG GENERATIVO
+   JavaScript construye geometría SVG: el formato es texto,
+   así que "programar una imagen" es literal. Cada círculo
+   que creamos es un nodo del DOM: accesible, escalable y
+   animable con CSS.
+   ============================================================ */
+
+const SVG_NS = "http://www.w3.org/2000/svg";   // namespace obligatorio
+const escena = document.getElementById("escena");
+
+function generar() {
+  // vaciamos la escena (borra todos los nodos hijos)
+  escena.innerHTML = "";
+
+  // rejilla de círculos cuyo radio y color salen del azar controlado
+  const filas = 8, columnas = 9;
+  for (let f = 0; f < filas; f++) {
+    for (let c = 0; c < columnas; c++) {
+      const t = c / (columnas - 1);              // 0 → 1 de izquierda a derecha
+      const radio = 6 + Math.random() * 26 * Math.sin(t * Math.PI);
+
+      // createElementNS (no createElement): SVG vive en su propio namespace
+      const circulo = document.createElementNS(SVG_NS, "circle");
+      circulo.setAttribute("cx", 60 + c * 65);
+      circulo.setAttribute("cy", 60 + f * 60);
+      circulo.setAttribute("r", radio);
+      circulo.setAttribute("fill", `hsl(${16 + t * 40}, 85%, ${50 + Math.random() * 15}%)`);
+      circulo.setAttribute("opacity", 0.85);
+
+      // pequeño juego: al pasar el ratón, el círculo crece
+      // (la transición CSS hace el resto)
+      circulo.addEventListener("pointerenter", () => circulo.setAttribute("r", radio * 1.8));
+      circulo.addEventListener("pointerleave", () => circulo.setAttribute("r", radio));
+
+      escena.appendChild(circulo);
+    }
+  }
+}
+
+generar();
+document.addEventListener("click", generar);
+</script>
+</body>
+</html>

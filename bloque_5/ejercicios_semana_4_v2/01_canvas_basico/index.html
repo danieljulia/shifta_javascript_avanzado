@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>01 · Canvas básico — primer trazo</title>
+<style>
+  /* Fondo oscuro para que el lienzo destaque, igual que en la presentación */
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; background: #1d1d23; }
+</style>
+</head>
+<body>
+<canvas id="lienzo" width="640" height="480"></canvas>
+<script>
+/* ============================================================
+   01 · CANVAS BÁSICO
+   Los tres pasos de siempre: tomar el lienzo → pedir el
+   contexto 2D → dibujar con ctx. Aquí están los primitivos
+   que usaremos en todos los ejercicios de la sesión.
+   ============================================================ */
+
+// PASO 1 — Tomar el lienzo del DOM
+const canvas = document.getElementById("lienzo");
+
+// PASO 2 — Pedir el contexto de dibujo 2D (bitmap: píxel a píxel)
+const ctx = canvas.getContext("2d");
+
+// PASO 3 — Dibujar
+
+// Rectángulo relleno: fillRect(x, y, ancho, alto)
+ctx.fillStyle = "#FF5A3C";                 // bermellón de la sesión
+ctx.fillRect(50, 50, 200, 100);            // el rect del ejemplo de clase
+
+// Círculo: hay que abrir un "path" (camino) y cerrarlo
+ctx.beginPath();
+ctx.arc(420, 120, 60, 0, Math.PI * 2);     // arc(cx, cy, radio, inicio, fin)
+ctx.fillStyle = "#E8B84B";
+ctx.fill();
+
+// Trazo libre con beginPath / moveTo / lineTo / stroke
+ctx.beginPath();                           // empezamos un nuevo camino
+ctx.moveTo(50, 300);                       // lápiz arriba, mover a (50, 300)
+ctx.lineTo(250, 380);                      // línea hasta (250, 380)
+ctx.bezierCurveTo(350, 430, 450, 250, 590, 330); // curva de Bézier cúbica
+ctx.lineWidth = 4;
+ctx.strokeStyle = "#4FC9C1";
+ctx.stroke();                              // dibuja el contorno del camino
+
+// Texto: fillText(texto, x, y)
+ctx.fillStyle = "#F2EFE8";
+ctx.font = "20px system-ui, sans-serif";
+ctx.fillText("01 · Canvas básico", 50, 440);
+</script>
+</body>
+</html>

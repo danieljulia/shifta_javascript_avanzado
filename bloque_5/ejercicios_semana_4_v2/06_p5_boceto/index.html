@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>06 · p5.js — boceto mínimo</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+</head>
+<body>
+<script>
+/* ============================================================
+   06 · P5.JS — BOCETO MÍNIMO (setup + draw)
+   El mismo boceto de la presentación: setup() corre una vez,
+   draw() se repite ~60 veces por segundo. Mueve el ratón.
+   ============================================================ */
+
+function setup() {
+  createCanvas(640, 480);   // crea el lienzo y lo coloca en la página
+  background(20);           // fondo casi negro UNA vez
+}
+
+function draw() {
+  noStroke();               // sin contorno
+  // fill(rojo, verde, azul, alfa): alfa 40 → estela suave
+  fill(255, 90, 60, 40);
+  // circle(x, y, diámetro) en la posición del ratón
+  circle(mouseX, mouseY, 60);
+
+  // una segunda pincelada que "respira" sola, sin ratón:
+  // noise() en p5 devuelve 0..1 y es Perlin de verdad
+  const nx = noise(frameCount * 0.008) * width;
+  const ny = noise(frameCount * 0.008 + 100) * height;
+  fill(79, 201, 193, 30);   // teal
+  circle(nx, ny, 40);
+}
+</script>
+</body>
+</html>

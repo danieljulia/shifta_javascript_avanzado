@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>05 · Trazo con físicas — resorte</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; background: #141417; }
+</style>
+</head>
+<body>
+<canvas id="lienzo" width="800" height="600"></canvas>
+<script>
+/* ============================================================
+   05 · TRAZO CON FÍSICAS — resorte al ratón
+   Una cadena de puntos sigue al cursor con física de muelle
+   (ley de Hooke simplificada). El gesto del espectador
+   deforma la obra: el trazo tiene masa, elasticidad, memoria.
+   ============================================================ */
+
+const canvas = document.getElementById("lienzo");
+const ctx = canvas.getContext("2d");
+
+const raton = { x: canvas.width / 2, y: canvas.height / 2 };
+canvas.addEventListener("pointermove", (e) => {
+  const r = canvas.getBoundingClientRect();
+  raton.x = e.clientX - r.left;
+  raton.y = e.clientY - r.top;
+});
+
+/* Cadena de N puntos. Cada punto:
+   - se mueve un porcentaje de la distancia a su "objetivo"
+     (el punto anterior, o el ratón para la cabeza):
+     eso es un resorte con rigidez k. */
+const N = 40;
+const cadena = Array.from({ length: N }, () => ({
+  x: canvas.width / 2,
+  y: canvas.height / 2,
+}));
+const rigidez = 0.35;      // k alto → seguimiento duro; k bajo → gomoso
+const grosorMin = 1, grosorMax = 10;
+
+function dibujar() {
+  // la cabeza persigue el ratón; el resto, al punto anterior
+  cadena[0].x += (raton.x - cadena[0].x) * rigidez;
+  cadena[0].y += (raton.y - cadena[0].y) * rigidez;
+  for (let i = 1; i < N; i++) {
+    cadena[i].x += (cadena[i - 1].x - cadena[i].x) * rigidez;
+    cadena[i].y += (cadena[i - 1].y - cadena[i].y) * rigidez;
+  }
+
+  // estelas persistentes: fondo con alfa en vez de borrar
+  ctx.fillStyle = "rgba(20, 20, 23, 0.12)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // dibujamos la cadena como una cinta: grosor decreciente
+  // de la cabeza a la cola y color entre bermellón y ámbar
+  for (let i = 1; i < N; i++) {
+    const t = i / (N - 1);                    // 0 cabeza → 1 cola
+    ctx.strokeStyle = `hsla(${16 + t * 28}, 85%, 58%, 0.9)`;
+    ctx.lineWidth = grosorMax * (1 - t) + grosorMin;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(cadena[i - 1].x, cadena[i - 1].y);
+    ctx.lineTo(cadena[i].x, cadena[i].y);
+    ctx.stroke();
+  }
+
+  // marcamos la cabeza: un punto pequeño que "siente" el ratón
+  ctx.fillStyle = "#F2EFE8";
+  ctx.beginPath();
+  ctx.arc(cadena[0].x, cadena[0].y, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  requestAnimationFrame(dibujar);
+}
+requestAnimationFrame(dibujar);
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>10 · three.js — escultura procedural</title>
+<style>
+  body { margin: 0; background: #141417; overflow: hidden; }
+</style>
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+</head>
+<body>
+<script>
+/* ============================================================
+   10 · THREE.JS — ESCULTURA DIGITAL EN TIEMPO REAL
+   Los tres ingredientes de toda escena three.js:
+   ESCENA + CÁMARA + RENDERIZADOR. Encima: luces y un
+   torus knot de alambre (geometría procedural) que gira.
+   Mueve el ratón para orbitar.
+   ============================================================ */
+
+// 1 · ESCENA: el mundo donde viven los objetos
+const escena = new THREE.Scene();
+escena.fog = new THREE.Fog(0x141417, 6, 18);        // niebla = atmósfera
+
+// 2 · CÁMARA: el punto de vista (perspectiva: fov, aspecto, cerca, lejos)
+const camara = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+camara.position.set(0, 0, 6);
+
+// 3 · RENDERIZADOR: convierte la escena en píxeles vía WebGL
+const renderizador = new THREE.WebGLRenderer({ antialias: true });
+renderizador.setSize(innerWidth, innerHeight);
+renderizador.setPixelRatio(devicePixelRatio);
+document.body.appendChild(renderizador.domElement);
+
+/* ---------- Luces: en 3D el color ES luz ---------- */
+escena.add(new THREE.AmbientLight(0xffffff, 0.25));              // base suave
+const luz1 = new THREE.PointLight(0xff5a3c, 60); luz1.position.set(3, 2, 4);
+const luz2 = new THREE.PointLight(0x4fc9c1, 40); luz2.position.set(-3, -2, 3);
+escena.add(luz1, luz2);
+
+/* ---------- La escultura: torus knot de alambre ----------
+   Geometría procedural (no hay ningún modelo importado):
+   la forma sale de una fórmula. El material wireframe la
+   deja transparente, como un dibujo en 3D. */
+const geometria = new THREE.TorusKnotGeometry(1.4, 0.4, 220, 28);
+const material = new THREE.MeshStandardMaterial({
+  color: 0xf2efe8, wireframe: true, emissive: 0x30140c,
+});
+const escultura = new THREE.Mesh(geometria, material);
+escena.add(escultura);
+
+/* ---------- Órbita con el ratón ---------- */
+let objetivoX = 0, objetivoY = 0;
+addEventListener("pointermove", (e) => {
+  objetivoX = (e.clientX / innerWidth - 0.5) * 2;   // -1 .. 1
+  objetivoY = (e.clientY / innerHeight - 0.5) * 2;
+});
+
+/* ---------- Bucle de animación ----------
+   Mismo gesto que en Canvas/p5: cada frame movemos y redibujamos. */
+function animar(tiempo) {
+  escultura.rotation.y = tiempo * 0.0004 + objetivoX * 1.2;
+  escultura.rotation.x = objetivoY * 0.8;
+  luz1.position.x = Math.sin(tiempo * 0.001) * 4;   // la luz también baila
+  renderizador.render(escena, camara);
+  requestAnimationFrame(animar);
+}
+requestAnimationFrame(animar);
+
+addEventListener("resize", () => {
+  camara.aspect = innerWidth / innerHeight;
+  camara.updateProjectionMatrix();
+  renderizador.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>

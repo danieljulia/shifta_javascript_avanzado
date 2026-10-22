@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>02 · Flow field — campo de flujo</title>
+<style>
+  body { margin: 0; background: #141417; display: grid; place-items: center; min-height: 100vh; }
+  canvas { border: 1px solid #33333b; background: #141417; }
+</style>
+</head>
+<body>
+<canvas id="lienzo" width="800" height="600"></canvas>
+<script>
+/* ============================================================
+   02 · FLOW FIELD (campo de flujo)
+   Cientos de agentes dibujan su trayectoria siguiendo un
+   campo de ángulos generado con ruido. Regla + azar
+   controlado + repetición = textura viva.
+   ============================================================ */
+
+const canvas = document.getElementById("lienzo");
+const ctx = canvas.getContext("2d");
+
+/* ---------- Ruido de valor 2D (pseudo-Perlin) ----------
+   Rejilla de valores aleatorios (hash) interpolados con
+   curvas suaves (smoothstep). Devuelve un número 0..1. */
+function hash(x, y) {
+  const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return n - Math.floor(n);                          // parte fraccional
+}
+function ruido(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y);      // celda de la rejilla
+  const xf = x - xi, yf = y - yi;                    // posición dentro de la celda
+  const u = xf * xf * (3 - 2 * xf);                  // smoothstep en x
+  const v = yf * yf * (3 - 2 * yf);                  // smoothstep en y
+  const a = hash(xi, yi),     b = hash(xi + 1, yi);
+  const c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  // interpolación bilineal suave entre los 4 vértices de la celda
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+
+/* ---------- Agente ----------
+   Un agente = una partícula con posición, velocidad y una
+   estela (lista de puntos por donde ha pasado). */
+class Agente {
+  constructor() {
+    this.reset();
+    // cada agente nace en una fase distinta del color
+    this.tono = Math.random();
+  }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vida = 60 + Math.random() * 120;   // frames hasta renacer
+  }
+  paso(tiempo) {
+    // 1 · El ruido decide el ángulo en este punto del espacio.
+    //     Escalamos x/y (0.003) para que el campo varíe lento,
+    //     y sumamos tiempo para que el campo respire.
+    const angulo = ruido(this.x * 0.003, this.y * 0.003 + tiempo * 0.0002) * Math.PI * 4;
+
+    // 2 · Avanzamos en la dirección del ángulo
+    const vel = 1.6;
+    const px = this.x, py = this.y;
+    this.x += Math.cos(angulo) * vel;
+    this.y += Math.sin(angulo) * vel;
+
+    // 3 · Dibujamos el segmento de estela con el color del agente
+    const matiz = 0.02 + this.tono * 0.12;  // bermellón → ámbar
+    ctx.strokeStyle = `hsla(${matiz * 360}, 85%, 60%, 0.35)`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(this.x, this.y);
+    ctx.stroke();
+
+    // 4 · Si sale del lienzo o se agota su vida, renace
+    this.vida--;
+    if (this.vida < 0 ||
+        this.x < 0 || this.x > canvas.width ||
+        this.y < 0 || this.y > canvas.height) this.reset();
+  }
+}
+
+// Creamos 600 agentes y los guardamos en un array
+const agentes = Array.from({ length: 600 }, () => new Agente());
+
+/* ---------- Bucle de animación ----------
+   requestAnimationFrame llama a dibujar() en cada frame (~60/s):
+   borramos y redibujamos TODO, como manda el bitmap. */
+function dibujar(tiempo) {
+  ctx.fillStyle = "rgba(20, 20, 23, 0.04)";   // fondo con alfa: estelas
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (const a of agentes) a.paso(tiempo);
+
+  requestAnimationFrame(dibujar);
+}
+requestAnimationFrame(dibujar);
+</script>
+</body>
+</html>
